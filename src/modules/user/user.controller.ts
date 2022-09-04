@@ -1,4 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Res, UseFilters, Session } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Req,
+  Res,
+  UseFilters,
+  Session,
+  UseGuards
+} from "@nestjs/common";
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -6,6 +19,7 @@ import { Request, Response} from "express";
 import { HttpExceptionFilter } from "../../common/filters";
 import { SystemExceptionFilter } from "../../common/filters/system-exception.filter";
 import { ResponseCodes } from "../../config";
+import { LocalAuthGuard } from "../auth/local-auth.guard";
 
 @UseFilters(HttpExceptionFilter)
 @Controller('user')
@@ -24,8 +38,9 @@ export class UserController {
     return this.userService.create(body)
   }
 
+  @UseGuards(LocalAuthGuard)
   @Post('/login')
-  login(@Body() body: CreateUserDto, @Res() res: Response, @Session() session) {
+  login(@Body() body: CreateUserDto, @Res({passthrough: true}) res: Response, @Session() session) {
     const {username,password} = body
     if (!username || !password) {
       throw new SystemExceptionFilter(ResponseCodes.USERNAME_OR_PASSWORD_EMPTY)

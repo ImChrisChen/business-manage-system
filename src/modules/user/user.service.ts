@@ -86,6 +86,7 @@ export class UserService {
     if (!user) {
       throw new SystemExceptionFilter(ResponseCodes.USERNAME_OR_PASSWORD_INCORRECT)
     }
-    session.set('sid', '')
+    console.log('session:',session);
+    return user
   }
 }
