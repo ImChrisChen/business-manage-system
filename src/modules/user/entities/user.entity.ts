@@ -7,7 +7,7 @@ export class User {
   id: number;
 
   @Column({ type: "varchar" })
-  name: string;
+  username: string;
 
   @Column({ type: "enum", enum: ['0', '1'], default: '0'})
   sex: '0' | '1'

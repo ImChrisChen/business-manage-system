@@ -6,4 +6,4 @@
  */
 import { User } from "../entities/user.entity";
 
-export type FindOneUserOptions = Partial<Pick<User, "id" | "name" | "phone" | "email">>
+export type FindOneUserOptions = Partial<Pick<User, "id" | "username" | "phone" | "email" | "password">>

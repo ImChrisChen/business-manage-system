@@ -1,18 +1,51 @@
-import { Injectable } from '@nestjs/common';
+import { Global, HttpException, Injectable } from "@nestjs/common";
 import { UserService } from "../user/user.service";
 import { User } from "../user/entities/user.entity";
+import { sha256 } from "../../utils";
+import { JwtService } from "@nestjs/jwt";
+import { SystemExceptionFilter } from "../../common/filters/system-exception.filter";
+import { ResponseCodes } from "../../config";
+import { CreateUserDto } from "../user/dto/create-user.dto";
 
 @Injectable()
 export class AuthService {
-  constructor(private userService: UserService) {
+  constructor(
+    private userService: UserService,
+    private jwtService: JwtService,
+  ) {
   }
 
-  async vailddateUser (username:string, password: string):Promise<Omit<User, 'password'> | null> {
-    const user = await this.userService.findOne({name: username})
-    if (user && user.password === password) {
-      const {password, ...result} = user
-      return result
+  async login (user) {
+    if (!user) {
+      throw new SystemExceptionFilter(ResponseCodes.USER_NOT_EXIST)
     }
-    return null
+    const accessToken = this.genAccessToken({ username: user.username, id: user.id })
+    user['access_token'] = accessToken
+    return user
+  }
+
+  /**
+   * 生成 access_token
+   * @param user
+   */
+  genAccessToken ({username, id}): string {
+    const payload = {
+      username: username,
+      sub: id
+    }
+    return this.jwtService.sign(payload)
+  }
+
+  async validateUser (username:string, password: string):Promise<Omit<User, 'password'>> {
+    const user = await this.userService.findOne({username: username})
+    if (!user) {
+      throw new SystemExceptionFilter(ResponseCodes.USER_NOT_EXIST)
+    }
+    const hashedPassword = sha256(password)
+    if (user && user.password === hashedPassword) {
+      Reflect.deleteProperty(user,'password')
+      return user
+    }
+    throw new SystemExceptionFilter(ResponseCodes.USERNAME_OR_PASSWORD_INCORRECT)
   }
 }

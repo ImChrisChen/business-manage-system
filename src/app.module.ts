@@ -7,7 +7,7 @@ import { RoleModule } from './modules/role/role.module';
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { DataSource } from "typeorm";
 import { PermissionModule } from "./modules/permission/permission.module";
-import { AuthModule } from './modules/auth/auth.module';
+import { AuthModule } from "./modules/auth/auth.module";
 
 @Module({
   imports: [
@@ -25,10 +25,10 @@ import { AuthModule } from './modules/auth/auth.module';
       retryAttempts: 10
     }),
     UserModule,
+    AuthModule,
     GoodsModule,
     RoleModule,
     PermissionModule,
-    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

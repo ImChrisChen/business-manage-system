@@ -4,15 +4,20 @@
  * Date: 2022/9/4
  * Time: 22:33
  */
-import { PassportStrategy } from "@nestjs/passport";
-import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { AuthService } from "./auth.service";
-import { Strategy } from "passport-local";
+import { Strategy } from 'passport-local';
+import { PassportStrategy } from '@nestjs/passport';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { AuthService } from './auth.service';
+import { SystemExceptionFilter } from "../../common/filters/system-exception.filter";
+import { ResponseCodes } from "../../config";
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
-  constructor(private readonly authService: AuthService) {
-    super();
+  constructor(private authService: AuthService) {
+    super({
+      usernameField: 'username',
+      passwordField: 'password'
+    });
   }
 
   /**
@@ -20,12 +25,11 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
    * @param username
    * @param password
    */
-  async vaildate (username: string, password: string):Promise<any> {
-    const user = await this.authService.vailddateUser(username,password)
+  async validate(username: string, password: string): Promise<any> {
+    const user = await this.authService.validateUser(username, password);
     if (!user) {
-      throw new UnauthorizedException()
+      throw new SystemExceptionFilter(ResponseCodes.USER_NOT_EXIST)
     }
-    return user
+    return user;
   }
-
 }

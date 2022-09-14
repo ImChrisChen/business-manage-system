@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { Global, Injectable } from "@nestjs/common";
+import { CreateUserDto } from "./dto/create-user.dto";
+import { UpdateUserDto } from "./dto/update-user.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "./entities/user.entity";
 import { DataSource, Repository } from "typeorm";
@@ -15,7 +15,7 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    private readonly dataSource: DataSource
+    private readonly dataSource: DataSource,
   ) {
   }
   async create(createUserDto: CreateUserDto) {
@@ -28,17 +28,6 @@ export class UserService {
 
     let sql = `insert into user(name,password, role_id) values("${username}", "${hashPassword}", 1)`
     return this.dataSource.query(sql)
-
-    // this.userRepository.createQueryBuilder('user')
-    // let res = this.userRepository.createQueryBuilder('user').insert().into(User).values([
-    //   {
-    //     name    : username,
-    //     password: hashPassword,
-    //     sex     : "1",
-    //     role_id : 1
-    //   }
-    // ]).printSql().execute()
-    // return res
   }
 
   findAll() {
@@ -48,10 +37,8 @@ export class UserService {
   }
 
   async findOne(where: FindOneUserOptions) {
-    const user = await this.userRepository.findOneBy({ ...where, is_del: 0 })
-    if (!user) {
-      throw new SystemExceptionFilter(ResponseCodes.USER_NOT_EXIST)
-    }
+    let user = await this.userRepository.findOneBy({ ...where, is_del: 0 })
+    Reflect.deleteProperty(user,'password')
     return user
   }
 
@@ -78,15 +65,5 @@ export class UserService {
   remove (id: number) {
     return this.userRepository.delete(id)
   }
-
-  login(loginUserDto: CreateUserDto , session) {
-    const { username,password} = loginUserDto
-    const hashPassword = sha256(password)
-    const user = this.dataSource.query(`select * from user where name="${username}" and password="${hashPassword}" and is_del<>1 limit 1`)
-    if (!user) {
-      throw new SystemExceptionFilter(ResponseCodes.USERNAME_OR_PASSWORD_INCORRECT)
-    }
-    console.log('session:',session);
-    return user
-  }
 }
+
