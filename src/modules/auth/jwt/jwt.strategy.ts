@@ -7,8 +7,9 @@
 
 import { PassportStrategy } from "@nestjs/passport";
 import { Injectable } from "@nestjs/common";
-import { ExtractJwt, Strategy } from "passport-jwt";
+import { Strategy } from "passport-jwt";
 import { jwtConstants } from "../contants";
+import { Request } from "express";
 
 // 解决: ERROR [ExceptionsHandler] Unknown authentication strategy "jwt"
 // https://stackoverflow.com/questions/60405308/nestjs-passport-jwt-unknown-strategy
@@ -17,7 +18,10 @@ import { jwtConstants } from "../contants";
 export class JwtStrategy extends PassportStrategy(Strategy){
   constructor() {
     super({
-      jwtFromRequest: ExtractJwt.fromHeader('authorization'),
+      // jwtFromRequest: ExtractJwt.fromHeader('authorization'),
+      jwtFromRequest: (req:Request) => {
+        return req?.cookies?.['access_token'] || null
+      },
       ignoreExpiration: false,
       secretOrKey: jwtConstants.secret,
     });

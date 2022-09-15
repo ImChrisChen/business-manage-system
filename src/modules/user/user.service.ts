@@ -36,10 +36,13 @@ export class UserService {
     // return this.userRepository.find()
   }
 
-  async findOne(where: FindOneUserOptions) {
+  async findOne(where: FindOneUserOptions):Promise<[Omit<User, 'password'>, string]> {
     let user = await this.userRepository.findOneBy({ ...where, is_del: 0 })
-    Reflect.deleteProperty(user,'password')
-    return user
+    if (!user) {
+      throw new SystemExceptionFilter(ResponseCodes.USER_NOT_EXIST)
+    }
+    const { password, ...u} = user
+    return [u, password]
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {

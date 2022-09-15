@@ -37,12 +37,13 @@ export class AuthService {
   }
 
   async validateUser (username:string, password: string):Promise<Omit<User, 'password'>> {
-    const user = await this.userService.findOne({username: username})
+    const [user, pwd] = await this.userService.findOne({username: username})
+    console.log('validateUser:', user);
     if (!user) {
       throw new SystemExceptionFilter(ResponseCodes.USER_NOT_EXIST)
     }
     const hashedPassword = sha256(password)
-    if (user && user.password === hashedPassword) {
+    if (user && pwd === hashedPassword) {
       Reflect.deleteProperty(user,'password')
       return user
     }

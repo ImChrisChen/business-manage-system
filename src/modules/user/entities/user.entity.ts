@@ -1,5 +1,4 @@
 import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
-import { Role } from "../../role/entities/role.entity";
 
 @Entity()
 export class User {
@@ -9,8 +8,8 @@ export class User {
   @Column({ type: "varchar" })
   username: string;
 
-  @Column({ type: "enum", enum: ['0', '1'], default: '0'})
-  sex: '0' | '1'
+  @Column({ type: "enum", enum: [0, 1, -1], default: -1})
+  sex: 0 | 1 | -1
 
   @Column({type: "varchar"})
   email: string

@@ -6,13 +6,17 @@
  */
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from "@nestjs/common";
 import { Request } from "express";
+import { BaseExceptionFilter } from "@nestjs/core";
 
 /**
  * @Catch(HttpException) 表示只过滤HttpException类型的错误，其他错误走内置的全局 exception
  * https://github.com/nestjs/nest/issues/538
  */
 @Catch(HttpException)
-export class HttpExceptionFilter implements ExceptionFilter {
+export class HttpExceptionFilter extends BaseExceptionFilter implements ExceptionFilter {
+  constructor() {
+    super();
+  }
   catch(exception: HttpException, host: ArgumentsHost): any {
     const status = exception.getStatus();
     const ctx = host.switchToHttp();
@@ -28,15 +32,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
         msg: res.msg,
         data: {}
       })
-    } else {
-      response
-        // @ts-ignore
-        .status(status)
-        .json({
-          statusCode: status,
-          timestamp: new Date().toISOString(),
-          path: request.url,
-        });
-      }
+    }
+
+    // 没匹配到则走默认的过滤器 https://github.com/nestjs/nest/pull/908
+    super.catch(exception,host)
   }
 }

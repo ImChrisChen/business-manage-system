@@ -11,7 +11,6 @@ import { HttpException, HttpStatus } from "@nestjs/common";
  */
 export class SystemExceptionFilter extends HttpException {
   constructor(options: [ number, string ] | any, msg?: string) {
-    console.log(options);
     const [ code, defaultMsg ] = options;
     super({
       code: code,
