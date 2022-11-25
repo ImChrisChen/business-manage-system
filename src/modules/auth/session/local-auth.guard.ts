@@ -5,19 +5,19 @@
  * Time: 22:44
  */
 
-import { AuthGuard } from "@nestjs/passport";
-import { ExecutionContext, Injectable } from "@nestjs/common";
+import { AuthGuard } from '@nestjs/passport'
+import { ExecutionContext, Injectable } from '@nestjs/common'
 
 /**
  * 登录时触发
  */
 @Injectable()
 export class LocalAuthGuard extends AuthGuard('local') {
-  async canActivate (context: ExecutionContext) {
-    const result = (super.canActivate(context) as boolean)
+  async canActivate(context: ExecutionContext) {
+    const result = super.canActivate(context) as boolean
     const request = context.switchToHttp().getRequest()
     let res = await super.logIn(request)
-    console.log('login:',res);
+    console.log('login:', res)
     return result
   }
 }

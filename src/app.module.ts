@@ -1,13 +1,13 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { UserModule } from './modules/user/user.module';
-import { GoodsModule } from './modules/goods/goods.module';
-import { RoleModule } from './modules/role/role.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { DataSource } from 'typeorm';
-import { PermissionModule } from './modules/permission/permission.module';
-import { AuthModule } from './modules/auth/auth.module';
+import { Module } from '@nestjs/common'
+import { AppController } from './app.controller'
+import { AppService } from './app.service'
+import { UserModule } from './modules/user/user.module'
+import { GoodsModule } from './modules/goods/goods.module'
+import { RoleModule } from './modules/role/role.module'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { DataSource } from 'typeorm'
+import { PermissionModule } from './modules/permission/permission.module'
+import { AuthModule } from './modules/auth/auth.module'
 
 @Module({
   imports: [

@@ -1,12 +1,12 @@
-import { Global, Module } from "@nestjs/common";
-import { AuthService } from './auth.service';
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { User } from "../user/entities/user.entity";
-import { LocalStrategy } from "./local.strategy";
-import { JwtModule } from "@nestjs/jwt";
-import { jwtConstants } from "./contants";
-import { JwtStrategy } from "./jwt/jwt.strategy";
-import { PassportModule } from "@nestjs/passport";
+import { Global, Module } from '@nestjs/common'
+import { AuthService } from './auth.service'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { User } from '../user/entities/user.entity'
+import { LocalStrategy } from './local.strategy'
+import { JwtModule } from '@nestjs/jwt'
+import { jwtConstants } from './contants'
+import { JwtStrategy } from './jwt/jwt.strategy'
+import { PassportModule } from '@nestjs/passport'
 
 @Global()
 @Module({
@@ -21,7 +21,7 @@ import { PassportModule } from "@nestjs/passport";
       signOptions: { expiresIn: '30m' },
     }),
   ],
-  providers: [AuthService, LocalStrategy,JwtStrategy],
-  exports: [AuthService]
+  providers: [AuthService, LocalStrategy, JwtStrategy],
+  exports: [AuthService],
 })
 export class AuthModule {}

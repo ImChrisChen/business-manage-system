@@ -4,11 +4,11 @@
  * Date: 2022/9/7
  * Time: 00:04
  */
-import { SetMetadata } from "@nestjs/common";
+import { SetMetadata } from '@nestjs/common'
 
 export const jwtConstants = {
   secret: 'secretKey',
-};
+}
 
 export const IS_PUBLIC_KEY = 'is_public'
 

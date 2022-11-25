@@ -4,24 +4,32 @@
  * Date: 2022/9/2
  * Time: 00:41
  */
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from "@nestjs/common";
-import { Request } from "express";
-import { BaseExceptionFilter } from "@nestjs/core";
+import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpException,
+} from '@nestjs/common'
+import { Request } from 'express'
+import { BaseExceptionFilter } from '@nestjs/core'
 
 /**
  * @Catch(HttpException) 表示只过滤HttpException类型的错误，其他错误走内置的全局 exception
  * https://github.com/nestjs/nest/issues/538
  */
 @Catch(HttpException)
-export class HttpExceptionFilter extends BaseExceptionFilter implements ExceptionFilter {
+export class HttpExceptionFilter
+  extends BaseExceptionFilter
+  implements ExceptionFilter
+{
   constructor() {
-    super();
+    super()
   }
   catch(exception: HttpException, host: ArgumentsHost): any {
-    const status = exception.getStatus();
-    const ctx = host.switchToHttp();
-    const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<Request>();
+    const status = exception.getStatus()
+    const ctx = host.switchToHttp()
+    const response = ctx.getResponse<Response>()
+    const request = ctx.getRequest<Request>()
 
     // SystemException
     const res = exception['response']
@@ -30,11 +38,11 @@ export class HttpExceptionFilter extends BaseExceptionFilter implements Exceptio
       response.status(200).json({
         code: res.code,
         msg: res.msg,
-        data: {}
+        data: {},
       })
     }
 
     // 没匹配到则走默认的过滤器 https://github.com/nestjs/nest/pull/908
-    super.catch(exception,host)
+    super.catch(exception, host)
   }
 }

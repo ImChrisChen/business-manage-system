@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity, PrimaryColumn } from 'typeorm'
 
 @Entity()
 export class Role {
@@ -16,5 +16,4 @@ export class Role {
 
   @Column()
   updated_at: number
-
 }
