@@ -4,12 +4,7 @@
  * Date: 2022/9/2
  * Time: 00:41
  */
-import {
-  ArgumentsHost,
-  Catch,
-  ExceptionFilter,
-  HttpException,
-} from '@nestjs/common'
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from '@nestjs/common'
 import { Request } from 'express'
 import { BaseExceptionFilter } from '@nestjs/core'
 
@@ -18,10 +13,7 @@ import { BaseExceptionFilter } from '@nestjs/core'
  * https://github.com/nestjs/nest/issues/538
  */
 @Catch(HttpException)
-export class HttpExceptionFilter
-  extends BaseExceptionFilter
-  implements ExceptionFilter
-{
+export class HttpExceptionFilter extends BaseExceptionFilter implements ExceptionFilter {
   constructor() {
     super()
   }
@@ -31,11 +23,14 @@ export class HttpExceptionFilter
     const response = ctx.getResponse<Response>()
     const request = ctx.getRequest<Request>()
 
+    console.log(exception)
+
     // SystemException
     const res = exception['response']
     if ('code' in res && 'msg' in res) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      response.status(200).json({
+      response.status(status).json({
         code: res.code,
         msg: res.msg,
         data: {},

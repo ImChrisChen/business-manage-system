@@ -9,10 +9,7 @@ import { CreateUserDto } from '../user/dto/create-user.dto'
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private userService: UserService,
-    private jwtService: JwtService,
-  ) {}
+  constructor(private userService: UserService, private jwtService: JwtService) {}
 
   async login(user) {
     if (!user) {
@@ -38,10 +35,7 @@ export class AuthService {
     return this.jwtService.sign(payload)
   }
 
-  async validateUser(
-    username: string,
-    password: string,
-  ): Promise<Omit<User, 'password'>> {
+  async validateUser(username: string, password: string): Promise<Omit<User, 'password'>> {
     const [user, pwd] = await this.userService.findOne({ username: username })
     console.log('validateUser:', user)
     if (!user) {
@@ -52,8 +46,6 @@ export class AuthService {
       Reflect.deleteProperty(user, 'password')
       return user
     }
-    throw new SystemExceptionFilter(
-      ResponseCodes.USERNAME_OR_PASSWORD_INCORRECT,
-    )
+    throw new SystemExceptionFilter(ResponseCodes.USERNAME_OR_PASSWORD_INCORRECT)
   }
 }

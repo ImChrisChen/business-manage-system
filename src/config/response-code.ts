@@ -12,6 +12,7 @@
 // export type CodeKeys = keyof typeof ResponseCodes
 
 export const ResponseCodes = {
+  FAIL: [-1, 'fail'],
   OK: [0, 'ok'],
 
   USER_NOT_LOGIN: [10010, 'user not login'],
@@ -22,4 +23,6 @@ export const ResponseCodes = {
 
   MISSING_PARAMETERS: [10050, 'missing parameters'],
   PARAMETERS_INCORRECT: [10051, 'parameters incorrect'],
+
+  RESOURCE_NOT_FOUND: [20010, 'resource not found'],
 }

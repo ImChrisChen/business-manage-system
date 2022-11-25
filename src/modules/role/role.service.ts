@@ -1,26 +1,42 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { CreateRoleDto } from './dto/create-role.dto'
 import { UpdateRoleDto } from './dto/update-role.dto'
+import { Repository } from 'typeorm'
+import { Role } from './entities/role.entity'
+import { InjectRepository } from '@nestjs/typeorm'
+import { SystemExceptionFilter } from '../../common/filters/system-exception.filter'
+import { ResponseCodes } from '../../config'
 
 @Injectable()
 export class RoleService {
-  create(createRoleDto: CreateRoleDto) {
-    return 'This action adds a new role'
+  constructor(
+    @InjectRepository(Role)
+    private readonly roleRepository: Repository<Role>,
+  ) {}
+
+  async create(createRoleDto: CreateRoleDto) {
+    let role = new Role()
+    role = this.roleRepository.merge(role, createRoleDto)
+    return this.roleRepository.save(role)
   }
 
   findAll() {
-    return `This action returns all role`
+    return this.roleRepository.createQueryBuilder().select('*').getRawMany()
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} role`
+    return this.roleRepository.createQueryBuilder().where({ id: id }).getOne()
   }
 
   update(id: number, updateRoleDto: UpdateRoleDto) {
-    return `This action updates a #${id} role`
+    return this.roleRepository.update(id, updateRoleDto)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} role`
+  async remove(id: number) {
+    const res = await this.roleRepository.delete(id)
+    if (res.affected) {
+      return new SystemExceptionFilter(ResponseCodes.OK)
+    }
+    return new SystemExceptionFilter(ResponseCodes.OK, '资源不存在,删除失败')
   }
 }

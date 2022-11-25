@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { DataSource } from 'typeorm'
 import { PermissionModule } from './modules/permission/permission.module'
 import { AuthModule } from './modules/auth/auth.module'
+import { TodoModule } from './modules/todo/todo.module'
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { AuthModule } from './modules/auth/auth.module'
     GoodsModule,
     RoleModule,
     PermissionModule,
+    TodoModule,
   ],
   controllers: [AppController],
   providers: [AppService],

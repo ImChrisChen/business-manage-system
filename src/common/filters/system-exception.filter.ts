@@ -7,17 +7,21 @@
 import { HttpException, HttpStatus } from '@nestjs/common'
 
 /**
- * 系统层(业务)异常过滤器
+ * 业务层特殊返回处理(自定义返回msg和code)
+ * 在拦截器中处理异常逻辑
  */
 export class SystemExceptionFilter extends HttpException {
-  constructor(options: [number, string] | any, msg?: string) {
+  public is_system_exception_error = true
+  constructor(options: [number, string] | any, data = {}, msg?: string) {
     const [code, defaultMsg] = options
     super(
       {
         code: code,
+        data: data,
         msg: msg || defaultMsg,
       },
       HttpStatus.OK,
     )
+    // this.is_system_exception_error = code !== 0
   }
 }
