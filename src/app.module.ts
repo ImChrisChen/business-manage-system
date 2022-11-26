@@ -9,6 +9,8 @@ import { DataSource } from 'typeorm'
 import { PermissionModule } from './modules/permission/permission.module'
 import { AuthModule } from './modules/auth/auth.module'
 import { TodoModule } from './modules/todo/todo.module'
+import { BuynoteTypeModule } from './modules/buynote_type/buynote_type.module'
+import { BuynoteModule } from './modules/buynote/buynote.module'
 
 @Module({
   imports: [
@@ -31,6 +33,8 @@ import { TodoModule } from './modules/todo/todo.module'
     RoleModule,
     PermissionModule,
     TodoModule,
+    BuynoteTypeModule,
+    BuynoteModule,
   ],
   controllers: [AppController],
   providers: [AppService],
