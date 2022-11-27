@@ -11,6 +11,7 @@ import { AuthModule } from './modules/auth/auth.module'
 import { TodoModule } from './modules/todo/todo.module'
 import { BuynoteTypeModule } from './modules/buynote_type/buynote_type.module'
 import { BuynoteModule } from './modules/buynote/buynote.module'
+import { GoodsCategoryModule } from './modules/goods_category/goods_category.module'
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { BuynoteModule } from './modules/buynote/buynote.module'
     TodoModule,
     BuynoteTypeModule,
     BuynoteModule,
+    GoodsCategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

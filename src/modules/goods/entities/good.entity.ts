@@ -1,14 +1,13 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, JoinColumn } from 'typeorm'
+import { BaseColumnDto } from '../../../common/dto/index.dto'
+import { GoodsCategory } from '../../goods_category/entities/goods_category.entity'
 @Entity()
-export class Goods {
+export class Goods extends BaseColumnDto {
   @PrimaryGeneratedColumn()
   id: number
 
   @Column()
   goods_name: string
-
-  @Column()
-  goods_category_id: number
 
   @Column()
   goods_price: number
@@ -21,4 +20,10 @@ export class Goods {
 
   @Column()
   version: string
+
+  @Column()
+  goods_category_id: number
+
+  @ManyToOne(() => GoodsCategory, (goods_category) => goods_category.goods_list)
+  goods_list: Array<Goods>
 }

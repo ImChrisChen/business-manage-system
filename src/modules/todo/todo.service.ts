@@ -9,37 +9,36 @@ import { ResponseCodes } from '../../config'
 
 @Injectable()
 export class TodoService {
-  constructor(@InjectRepository(Todo) private readonly todoRepository: Repository<Todo>) {}
+  constructor(@InjectRepository(Todo) private readonly repository: Repository<Todo>) {}
   create(createTodoDto: CreateTodoDto) {
     let todo = new Todo()
-    todo = this.todoRepository.merge(todo, createTodoDto)
-    return this.todoRepository.save(todo)
+    todo = this.repository.merge(todo, createTodoDto)
+    return this.repository.save(todo)
   }
 
   findAll() {
-    return this.todoRepository.createQueryBuilder().select('*').getRawMany()
+    return this.repository.createQueryBuilder().getMany()
   }
 
   async findOne(id: number) {
-    const todo = await this.todoRepository.createQueryBuilder().where({ id }).getOne()
+    const todo = await this.repository.findOneBy({ id })
     if (!todo) {
-      return new SystemExceptionFilter(ResponseCodes.RESOURCE_NOT_FOUND)
+      throw new SystemExceptionFilter(ResponseCodes.RESOURCE_NOT_FOUND)
     }
     return todo
   }
 
   async update(id: number, updateTodoDto: UpdateTodoDto) {
-    let todo = await this.todoRepository.findOneBy({ id })
-    todo = this.todoRepository.merge(todo, updateTodoDto)
-    return this.todoRepository.save(todo)
+    let todo = await this.repository.findOneBy({ id })
+    todo = this.repository.merge(todo, updateTodoDto)
+    return this.repository.save(todo)
   }
 
   async remove(id: number) {
-    const res = await this.todoRepository.delete(id)
-    if (res.affected) {
-      return new SystemExceptionFilter(ResponseCodes.OK, {}, '删除成功')
-    } else {
-      return new SystemExceptionFilter(ResponseCodes.OK, {}, '资源不存在,删除失败')
+    const res = await this.repository.delete(id)
+    if (!res.affected) {
+      throw new SystemExceptionFilter(ResponseCodes.OK, {}, '资源不存在,删除失败')
     }
+    return res
   }
 }

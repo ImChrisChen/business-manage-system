@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { PermissionService } from '../permission.service'
 
-describe('AuthService', () => {
+describe('PermissionService', () => {
   let service: PermissionService
 
   beforeEach(async () => {

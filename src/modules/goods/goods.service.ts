@@ -9,25 +9,25 @@ import { Repository } from 'typeorm'
 export class GoodsService {
   constructor(
     @InjectRepository(Goods)
-    private readonly goodsRepository: Repository<Goods>,
+    private readonly repository: Repository<Goods>,
   ) {}
   create(createGoodDto: CreateGoodDto) {
-    return 'This action adds a new good'
+    return this.repository.insert(createGoodDto)
   }
 
   findAll() {
-    return this.goodsRepository.find()
+    return this.repository.createQueryBuilder().getMany()
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} good`
+    return this.repository.findOneBy({ id })
   }
 
   update(id: number, updateGoodDto: UpdateGoodDto) {
-    return `This action updates a #${id} good`
+    return this.repository.update(id, updateGoodDto)
   }
 
   remove(id: number) {
-    return `This action removes a #${id} good`
+    return this.repository.delete(id)
   }
 }

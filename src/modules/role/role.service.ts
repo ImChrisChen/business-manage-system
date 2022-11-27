@@ -21,7 +21,7 @@ export class RoleService {
   }
 
   findAll() {
-    return this.roleRepository.createQueryBuilder().select('*').getRawMany()
+    return this.roleRepository.createQueryBuilder().getMany()
   }
 
   findOne(id: number) {

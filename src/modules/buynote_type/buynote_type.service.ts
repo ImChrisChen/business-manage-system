@@ -17,7 +17,7 @@ export class BuynoteTypeService {
   }
 
   findAll() {
-    return this.repository.createQueryBuilder().getRawMany()
+    return this.repository.createQueryBuilder().getMany()
   }
 
   async findOne(id: number) {

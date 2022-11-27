@@ -3,7 +3,7 @@ import { BuynoteTypeService } from './buynote_type.service'
 import { CreateBuynoteTypeDto } from './dto/create-buynote_type.dto'
 import { UpdateBuynoteTypeDto } from './dto/update-buynote_type.dto'
 
-@Controller('buynote-type')
+@Controller('buynote_type')
 export class BuynoteTypeController {
   constructor(private readonly buynoteTypeService: BuynoteTypeService) {}
 

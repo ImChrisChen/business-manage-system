@@ -33,7 +33,7 @@ export class UserService {
     return this.userRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect(Role, 'role', 'user.role_id =' + ' role.id')
-      .getRawMany()
+      .getMany()
     // return this.userRepository.find()
   }
 
