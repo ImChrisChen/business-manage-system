@@ -17,7 +17,10 @@ async function bootstrap() {
   })
 
   // 设置 Swagger文档
-  const options = new DocumentBuilder().setTitle('Goods Store Api v1').setVersion('1.0').build()
+  const options = new DocumentBuilder()
+    .setTitle('Goods Store Api v1')
+    .setVersion('1.0')
+    .build()
   const document = SwaggerModule.createDocument(app, options)
   SwaggerModule.setup('api', app, document)
 

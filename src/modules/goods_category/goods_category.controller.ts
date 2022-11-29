@@ -1,7 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common'
 import { GoodsCategoryService } from './goods_category.service'
 import { CreateGoodsCategoryDto } from './dto/create-goods_category.dto'
 import { UpdateGoodsCategoryDto } from './dto/update-goods_category.dto'
+import { QueryGoodsCategoryDto } from './dto/query-goods_category.dto'
 
 @Controller('goods_category')
 export class GoodsCategoryController {
@@ -13,8 +23,8 @@ export class GoodsCategoryController {
   }
 
   @Get()
-  findAll() {
-    return this.goodsCategoryService.findAll()
+  findAll(@Query() query: QueryGoodsCategoryDto) {
+    return this.goodsCategoryService.findAll(query)
   }
 
   @Get(':id')
@@ -23,7 +33,10 @@ export class GoodsCategoryController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGoodsCategoryDto: UpdateGoodsCategoryDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateGoodsCategoryDto: UpdateGoodsCategoryDto,
+  ) {
     return this.goodsCategoryService.update(+id, updateGoodsCategoryDto)
   }
 

@@ -9,7 +9,9 @@ import { ResponseCodes } from '../../config'
 
 @Injectable()
 export class BuynoteService {
-  constructor(@InjectRepository(Buynote) private readonly repository: Repository<Buynote>) {}
+  constructor(
+    @InjectRepository(Buynote) private readonly repository: Repository<Buynote>,
+  ) {}
 
   create(createBuynoteDto: CreateBuynoteDto) {
     let item = new Buynote()
@@ -18,7 +20,12 @@ export class BuynoteService {
   }
 
   findAll() {
-    return this.repository.createQueryBuilder().getMany()
+    return this.repository
+      .createQueryBuilder()
+      .setFindOptions({
+        relations: ['type'],
+      })
+      .getMany()
   }
 
   async findOne(id: number) {

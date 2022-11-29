@@ -3,23 +3,35 @@ import { CreateGoodsCategoryDto } from './dto/create-goods_category.dto'
 import { UpdateGoodsCategoryDto } from './dto/update-goods_category.dto'
 import { InjectRepository } from '@nestjs/typeorm'
 import { GoodsCategory } from './entities/goods_category.entity'
-import { Repository } from 'typeorm'
+import { Like, Repository } from 'typeorm'
+import { QueryGoodsCategoryDto } from './dto/query-goods_category.dto'
 
 @Injectable()
 export class GoodsCategoryService {
-  constructor(@InjectRepository(GoodsCategory) private readonly repository: Repository<GoodsCategory>) {}
+  constructor(
+    @InjectRepository(GoodsCategory)
+    private readonly repository: Repository<GoodsCategory>,
+  ) {}
   create(createGoodsCategoryDto: CreateGoodsCategoryDto) {
     return this.repository.insert(createGoodsCategoryDto)
   }
 
-  findAll() {
-    return this.repository.createQueryBuilder().getMany()
+  findAll(query: QueryGoodsCategoryDto) {
+    return this.repository
+      .createQueryBuilder()
+      .where({
+        category_name: Like(`%${query.category_name}%`),
+      })
+      .setFindOptions({
+        relations: ['goods_list'],
+      })
+      .getMany()
   }
 
   findOne(id: number) {
     return this.repository.findOne({
       where: { id },
-      // relations: ['goods_list'],
+      relations: ['goods_list'],
     })
   }
 

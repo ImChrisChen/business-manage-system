@@ -1,8 +1,8 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
-import { BaseColumnDto } from '../../../common/dto/index.dto'
+import { BasicFieldEntity } from '../../../common/entities'
 
 @Entity()
-export class Todo extends BaseColumnDto {
+export class Todo extends BasicFieldEntity {
   @PrimaryGeneratedColumn()
   id: number
 

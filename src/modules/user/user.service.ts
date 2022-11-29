@@ -20,7 +20,9 @@ export class UserService {
   async create(createUserDto: CreateUserDto) {
     const { username, password } = createUserDto
     const hashPassword = sha256(password)
-    const [user] = await this.dataSource.query(`select * from user where name = 'admin' and is_del != 1 limit 1`)
+    const [user] = await this.dataSource.query(
+      `select * from user where name = 'admin' and is_del != 1 limit 1`,
+    )
     if (user) {
       throw new SystemExceptionFilter(ResponseCodes.USER_EXIST)
     }
@@ -37,7 +39,9 @@ export class UserService {
     // return this.userRepository.find()
   }
 
-  async findOne(where: FindOneUserOptions): Promise<[Omit<User, 'password'>, string]> {
+  async findOne(
+    where: FindOneUserOptions,
+  ): Promise<[Omit<User, 'password'>, string]> {
     const user = await this.userRepository.findOneBy({ ...where, is_del: 0 })
     if (!user) {
       throw new SystemExceptionFilter(ResponseCodes.USER_NOT_EXIST)

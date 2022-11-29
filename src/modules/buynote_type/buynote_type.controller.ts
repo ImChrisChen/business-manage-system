@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common'
 import { BuynoteTypeService } from './buynote_type.service'
 import { CreateBuynoteTypeDto } from './dto/create-buynote_type.dto'
 import { UpdateBuynoteTypeDto } from './dto/update-buynote_type.dto'
@@ -23,7 +31,10 @@ export class BuynoteTypeController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBuynoteTypeDto: UpdateBuynoteTypeDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateBuynoteTypeDto: UpdateBuynoteTypeDto,
+  ) {
     return this.buynoteTypeService.update(+id, updateBuynoteTypeDto)
   }
 

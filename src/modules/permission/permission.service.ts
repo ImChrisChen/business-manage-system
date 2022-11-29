@@ -6,7 +6,10 @@ import { Permission } from './entities/permission.entity'
 import { Repository } from 'typeorm'
 @Injectable()
 export class PermissionService {
-  constructor(@InjectRepository(Permission) private readonly repository: Repository<Permission>) {}
+  constructor(
+    @InjectRepository(Permission)
+    private readonly repository: Repository<Permission>,
+  ) {}
 
   create(createAuthDto: CreatePermissionDto) {
     return this.repository.insert(createAuthDto)

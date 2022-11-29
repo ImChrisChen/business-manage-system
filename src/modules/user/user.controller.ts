@@ -1,4 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Res, UseGuards, ParseIntPipe } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Req,
+  Res,
+  UseGuards,
+  ParseIntPipe,
+} from '@nestjs/common'
 import { UserService } from './user.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
@@ -13,7 +25,10 @@ import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard'
 @UseGuards(JwtAuthGuard)
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService, private readonly authService: AuthService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly authService: AuthService,
+  ) {}
 
   @SkipJwtAuth()
   @Post('/register')
@@ -28,7 +43,11 @@ export class UserController {
 
   @UseGuards(LocalAuthGuard)
   @Post('/login')
-  async login(@Body() body: CreateUserDto, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
+  async login(
+    @Body() body: CreateUserDto,
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const user = await this.authService.login(req.user)
     res.cookie('access_token', user['access_token'], {
       maxAge: Date.now() + 1000 * 60,
@@ -59,7 +78,10 @@ export class UserController {
 
   // @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto) {
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
     console.log(updateUserDto)
     return this.userService.update(+id, updateUserDto)
   }

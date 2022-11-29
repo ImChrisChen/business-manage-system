@@ -1,8 +1,9 @@
 import { Buynote } from 'src/modules/buynote/entities/buynote.entity'
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { BasicFieldEntity } from '../../../common/entities'
 
 @Entity()
-export class BuynoteType {
+export class BuynoteType extends BasicFieldEntity {
   @PrimaryGeneratedColumn()
   id: number
 
@@ -15,7 +16,6 @@ export class BuynoteType {
   @Column()
   path: string
 
-  // 虚拟字段
   @OneToMany((type) => Buynote, (buynote) => buynote.type)
   buynotes: Array<Buynote>
 }

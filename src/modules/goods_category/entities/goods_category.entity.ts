@@ -1,9 +1,9 @@
-import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
-import { BaseColumnDto } from '../../../common/dto/index.dto'
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import { Goods } from '../../goods/entities/good.entity'
+import { BasicFieldEntity } from '../../../common/entities'
 
 @Entity()
-export class GoodsCategory extends BaseColumnDto {
+export class GoodsCategory extends BasicFieldEntity {
   @PrimaryGeneratedColumn()
   id: number
 
@@ -16,6 +16,6 @@ export class GoodsCategory extends BaseColumnDto {
   @Column()
   path: string
 
-  @OneToMany(() => Goods, (goods) => goods.goods_category_id)
+  @OneToMany(() => Goods, (goods) => goods.goods_category)
   goods_list: Array<Goods>
 }

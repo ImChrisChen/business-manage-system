@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common'
-import { CreateGoodDto } from './dto/create-good.dto'
-import { UpdateGoodDto } from './dto/update-good.dto'
+import { CreateGoodsDto } from './dto/create-goods.dto'
+import { UpdateGoodsDto } from './dto/update-goods.dto'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Goods } from './entities/good.entity'
-import { Repository } from 'typeorm'
+import { Like, Repository } from 'typeorm'
+import { QueryGoodsDto } from './dto/query-goods.dto'
 
 @Injectable()
 export class GoodsService {
@@ -11,19 +12,31 @@ export class GoodsService {
     @InjectRepository(Goods)
     private readonly repository: Repository<Goods>,
   ) {}
-  create(createGoodDto: CreateGoodDto) {
+  create(createGoodDto: CreateGoodsDto) {
     return this.repository.insert(createGoodDto)
   }
 
-  findAll() {
-    return this.repository.createQueryBuilder().getMany()
+  findAll(query: QueryGoodsDto) {
+    return this.repository
+      .createQueryBuilder()
+      .setFindOptions({
+        relations: ['goods_category'],
+        where: {
+          goods_name: query.goods_name ? Like(`%${query.goods_name}%`) : null,
+          goods_desc: query.goods_desc ? Like(`%${query.goods_desc}%`) : null,
+        },
+      })
+      .getMany()
   }
 
   findOne(id: number) {
-    return this.repository.findOneBy({ id })
+    return this.repository.find({
+      where: { id },
+      relations: ['goods_category'],
+    })
   }
 
-  update(id: number, updateGoodDto: UpdateGoodDto) {
+  update(id: number, updateGoodDto: UpdateGoodsDto) {
     return this.repository.update(id, updateGoodDto)
   }
 

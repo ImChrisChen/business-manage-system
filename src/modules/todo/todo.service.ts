@@ -9,7 +9,9 @@ import { ResponseCodes } from '../../config'
 
 @Injectable()
 export class TodoService {
-  constructor(@InjectRepository(Todo) private readonly repository: Repository<Todo>) {}
+  constructor(
+    @InjectRepository(Todo) private readonly repository: Repository<Todo>,
+  ) {}
   create(createTodoDto: CreateTodoDto) {
     let todo = new Todo()
     todo = this.repository.merge(todo, createTodoDto)
@@ -37,7 +39,11 @@ export class TodoService {
   async remove(id: number) {
     const res = await this.repository.delete(id)
     if (!res.affected) {
-      throw new SystemExceptionFilter(ResponseCodes.OK, {}, '资源不存在,删除失败')
+      throw new SystemExceptionFilter(
+        ResponseCodes.OK,
+        {},
+        '资源不存在,删除失败',
+      )
     }
     return res
   }

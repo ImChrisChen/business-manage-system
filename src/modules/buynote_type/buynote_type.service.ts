@@ -9,7 +9,10 @@ import { ResponseCodes } from '../../config'
 
 @Injectable()
 export class BuynoteTypeService {
-  constructor(@InjectRepository(BuynoteType) private readonly repository: Repository<BuynoteType>) {}
+  constructor(
+    @InjectRepository(BuynoteType)
+    private readonly repository: Repository<BuynoteType>,
+  ) {}
   create(createBuynoteTypeDto: CreateBuynoteTypeDto) {
     let type = new BuynoteType()
     type = this.repository.merge(type, createBuynoteTypeDto)
@@ -17,11 +20,17 @@ export class BuynoteTypeService {
   }
 
   findAll() {
-    return this.repository.createQueryBuilder().getMany()
+    return this.repository
+      .createQueryBuilder()
+      .setFindOptions({ relations: ['buynotes'] })
+      .getMany()
   }
 
   async findOne(id: number) {
-    const type = await this.repository.findOneBy({ id })
+    const type = await this.repository.find({
+      where: { id },
+      relations: ['buynotes'],
+    })
     if (!type) {
       return new SystemExceptionFilter(ResponseCodes.RESOURCE_NOT_FOUND)
     }
