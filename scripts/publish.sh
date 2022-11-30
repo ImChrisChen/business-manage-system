@@ -17,6 +17,7 @@ image_name="imchrisorz/goods-store-service"
 
 docker build -t "${image_name}:${ver}" .
 
-docker tag "${image_name}:latest"
+docker tag "${image_name}:${ver}" "${image_name}:latest"
 
 docker push "${image_name}:latest"
+# docker push image_name --all-tags
