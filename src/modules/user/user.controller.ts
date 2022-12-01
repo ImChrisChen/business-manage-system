@@ -34,6 +34,7 @@ export class UserController {
   @Post('/register')
   register(@Body() body: CreateUserDto, @Req() req: Request) {
     req.session
+    debugger
     const { username = '', password = '' } = body
     if (!username || !password) {
       throw new SystemExceptionFilter(ResponseCodes.USERNAME_OR_PASSWORD_EMPTY)
@@ -66,7 +67,6 @@ export class UserController {
     return this.userService.findAll()
   }
 
-  // @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const [user] = await this.userService.findOne({ id: Number(id) })
@@ -76,7 +76,6 @@ export class UserController {
     return user
   }
 
-  // @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
@@ -86,7 +85,6 @@ export class UserController {
     return this.userService.update(+id, updateUserDto)
   }
 
-  // @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.userService.sortRemove(+id)

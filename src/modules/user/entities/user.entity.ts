@@ -1,4 +1,5 @@
-import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm'
+import { Column, Entity, ManyToMany, OneToMany, PrimaryColumn } from 'typeorm'
+import { Role } from '../../role/entities/role.entity'
 
 @Entity()
 export class User {
@@ -35,4 +36,8 @@ export class User {
   // 是否删除(软删除)
   @Column({ type: 'int' })
   is_del: number
+
+  // 一个用户可以拥有多个角色，一个角色也可以分配给不同用户
+  @ManyToMany(() => Role, (role) => role.users)
+  roles: Array<Role>
 }

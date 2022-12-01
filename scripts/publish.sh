@@ -19,5 +19,5 @@ docker build -t "${image_name}:${ver}" .
 
 docker tag "${image_name}:${ver}" "${image_name}:latest"
 
-docker push "${image_name}:latest"
-# docker push image_name --all-tags
+# docker push "${image_name}:latest"
+docker push image_name --all-tags
