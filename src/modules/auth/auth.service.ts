@@ -1,11 +1,10 @@
-import { Global, HttpException, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { UserService } from '../user/user.service'
 import { User } from '../user/entities/user.entity'
 import { sha256 } from '../../utils'
 import { JwtService } from '@nestjs/jwt'
 import { SystemExceptionFilter } from '../../common/filters/system-exception.filter'
 import { ResponseCodes } from '../../config'
-import { CreateUserDto } from '../user/dto/create-user.dto'
 
 @Injectable()
 export class AuthService {
@@ -15,6 +14,8 @@ export class AuthService {
   ) {}
 
   async login(user) {
+    console.log(user)
+    debugger
     if (!user) {
       throw new SystemExceptionFilter(ResponseCodes.USER_NOT_EXIST)
     }
@@ -44,6 +45,7 @@ export class AuthService {
   ): Promise<Omit<User, 'password'>> {
     const [user, pwd] = await this.userService.findOne({ username: username })
     console.log('validateUser:', user)
+    debugger
     if (!user) {
       throw new SystemExceptionFilter(ResponseCodes.USER_NOT_EXIST)
     }
@@ -51,9 +53,10 @@ export class AuthService {
     if (user && pwd === hashedPassword) {
       Reflect.deleteProperty(user, 'password')
       return user
+    } else {
+      throw new SystemExceptionFilter(
+        ResponseCodes.USERNAME_OR_PASSWORD_INCORRECT,
+      )
     }
-    throw new SystemExceptionFilter(
-      ResponseCodes.USERNAME_OR_PASSWORD_INCORRECT,
-    )
   }
 }

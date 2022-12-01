@@ -14,35 +14,46 @@ import { FindOneUserOptions } from './interface'
 export class UserService {
   constructor(
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    private readonly repository: Repository<User>,
     private readonly dataSource: DataSource,
   ) {}
   async create(createUserDto: CreateUserDto) {
     const { username, password } = createUserDto
     const hashPassword = sha256(password)
-    const [user] = await this.dataSource.query(
-      `select * from user where name = 'admin' and is_del != 1 limit 1`,
-    )
+
+    const user = await this.repository.findOneBy({
+      username: username,
+      is_del: 0,
+    })
+    debugger
+
+    // 用户已被注册
     if (user) {
-      throw new SystemExceptionFilter(ResponseCodes.USER_EXIST)
+      throw new SystemExceptionFilter(ResponseCodes.USER_IS_REGISTERED)
     }
 
-    const sql = `insert into user(name,password, role_id) values("${username}", "${hashPassword}", 1)`
-    return this.dataSource.query(sql)
+    let newUser = await this.repository.create({
+      username: username,
+      password: hashPassword,
+      role_id: 1,
+    })
+    newUser = await this.repository.save(newUser)
+    Reflect.deleteProperty(newUser, 'password')
+    return newUser
   }
 
   findAll() {
-    return this.userRepository
+    return this.repository
       .createQueryBuilder('user')
       .leftJoinAndSelect(Role, 'role', 'user.role_id =' + ' role.id')
       .getMany()
-    // return this.userRepository.find()
+    // return this.repository.find()
   }
 
   async findOne(
     where: FindOneUserOptions,
   ): Promise<[Omit<User, 'password'>, string]> {
-    const user = await this.userRepository.findOneBy({ ...where, is_del: 0 })
+    const user = await this.repository.findOneBy({ ...where, is_del: 0 })
     if (!user) {
       throw new SystemExceptionFilter(ResponseCodes.USER_NOT_EXIST)
     }
@@ -60,7 +71,7 @@ export class UserService {
     //   throw new SystemExceptionFilter(ResponseCodes.PARAMETERS_INCORRECT)
     // }
 
-    return this.userRepository.update(id, {
+    return this.repository.update(id, {
       ...updateUserDto,
     })
   }
@@ -71,6 +82,6 @@ export class UserService {
   }
 
   remove(id: number) {
-    return this.userRepository.delete(id)
+    return this.repository.delete(id)
   }
 }

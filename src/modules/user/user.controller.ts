@@ -22,7 +22,6 @@ import { AuthService } from '../auth/auth.service'
 import { SkipJwtAuth } from '../auth/contants'
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard'
 
-@UseGuards(JwtAuthGuard)
 @Controller('user')
 export class UserController {
   constructor(
@@ -49,6 +48,8 @@ export class UserController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
+    console.log(req.user)
+    debugger
     const user = await this.authService.login(req.user)
     res.cookie('access_token', user['access_token'], {
       maxAge: Date.now() + 1000 * 60,
@@ -62,6 +63,7 @@ export class UserController {
     res.cookie('access_token', '')
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('/userinfo')
   getUserInfo(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     return this.userService.findAll()

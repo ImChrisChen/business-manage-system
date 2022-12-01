@@ -17,6 +17,7 @@ export const ResponseCodes = {
 
   USER_NOT_LOGIN: [10010, 'user not login'],
   USER_NOT_EXIST: [10011, 'user not exist'],
+  USER_IS_REGISTERED: [10012, 'user is registered'],
   USER_EXIST: [10012, 'user is exist'],
   USERNAME_OR_PASSWORD_EMPTY: [10020, 'username or password empty'],
   USERNAME_OR_PASSWORD_INCORRECT: [10021, 'username or password incorrect'],
