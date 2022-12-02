@@ -1,8 +1,8 @@
 version: "3.8"
 services:
   backend:
-    image: "imchrisorz/goods-store-service:0.0.1"
+    image: "imchrisorz/business-manage-system:latest"
     restart: always
     ports:
       - "3003:3003"
-    container_name: "goods-store-service"
+    container_name: "business-manage-system"
