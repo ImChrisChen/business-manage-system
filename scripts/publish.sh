@@ -8,12 +8,11 @@ ver=$(cat ./package.json | grep -e '"version":' | tr -cd "[0-9].")
 
 git add .
 
-git commit -m "ci: 应用程序更新,当前版本:${ver}"
+git commit -m "ci: 版本发布,当前版本:${ver}"
 
 git push origin "origin/${current_branch_name}"
 
-
-image_name="imchrisorz/goods-store-service"
+image_name="imchrisorz/business-manage-system"
 
 docker build -t "${image_name}:${ver}" .
 
