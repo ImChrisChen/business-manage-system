@@ -27,12 +27,15 @@ export class HttpResponseInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map((data) => {
         // 业务状态
-        if (data?.is_system_exception_error) {
+        if (data?.isSystemExceptionError) {
           return {
             code: data.response.code,
             data: data.response.data,
             msg: data.response.msg,
           }
+        } else if (data?.isSkipGlobalInterceptor) {
+          // 跳过全局拦截器
+          return data.response
         } else {
           return {
             code: 0,

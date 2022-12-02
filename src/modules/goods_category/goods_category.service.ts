@@ -17,10 +17,13 @@ export class GoodsCategoryService {
   }
 
   findAll(query: QueryGoodsCategoryDto) {
+    console.log('query.category_name:', Boolean(query.category_name))
     return this.repository
       .createQueryBuilder()
       .where({
-        category_name: Like(`%${query.category_name}%`),
+        category_name: Like(
+          query.category_name ? `%${query.category_name}%` : '%',
+        ),
       })
       .setFindOptions({
         relations: ['goods_list'],

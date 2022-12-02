@@ -1,10 +1,9 @@
-import { Global, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { InjectRepository } from '@nestjs/typeorm'
 import { User } from './entities/user.entity'
-import { DataSource, Repository } from 'typeorm'
-import { Role } from '../role/entities/role.entity'
+import { Repository } from 'typeorm'
 import { sha256 } from '../../utils'
 import { SystemExceptionFilter } from '../../common/filters/system-exception.filter'
 import { ResponseCodes } from '../../config'
@@ -13,9 +12,7 @@ import { FindOneUserOptions } from './interface'
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User)
-    private readonly repository: Repository<User>,
-    private readonly dataSource: DataSource,
+    @InjectRepository(User) private readonly repository: Repository<User>,
   ) {}
   async create(createUserDto: CreateUserDto) {
     const { username, password } = createUserDto
@@ -25,7 +22,6 @@ export class UserService {
       username: username,
       is_del: 0,
     })
-    debugger
 
     // 用户已被注册
     if (user) {
@@ -38,16 +34,17 @@ export class UserService {
       role_id: 1,
     })
     newUser = await this.repository.save(newUser)
-    Reflect.deleteProperty(newUser, 'password')
-    return newUser
+    return this.filterUserPassword(newUser)
   }
 
   findAll() {
     return this.repository
-      .createQueryBuilder('user')
-      .leftJoinAndSelect(Role, 'role', 'user.role_id =' + ' role.id')
+      .createQueryBuilder()
+      .setFindOptions({ relations: ['roles'] })
       .getMany()
-    // return this.repository.find()
+      .then((user) => {
+        return user.map((item) => this.filterUserPassword(item))
+      })
   }
 
   async findOne(
@@ -78,10 +75,17 @@ export class UserService {
 
   // 软删除
   sortRemove(id: number) {
-    return this.dataSource.query(`update user set is_del=1 where id=${id}`)
+    // return this.dataSource.query(`update user set is_del=1 where id=${id}`)
+    return this.repository.update(id, { is_del: 1 })
   }
 
   remove(id: number) {
     return this.repository.delete(id)
+  }
+
+  // 过滤用户密码
+  filterUserPassword(user: User): Omit<User, 'password'> {
+    Reflect.deleteProperty(user, 'password')
+    return user
   }
 }

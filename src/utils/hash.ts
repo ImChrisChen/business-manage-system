@@ -10,3 +10,8 @@ export function sha256(v: string) {
   const hash = createHash('sha256')
   return hash.update(v).digest('hex')
 }
+
+export function sha512(v: string) {
+  const hash = createHash('sha512')
+  return hash.update(v).digest('hex')
+}

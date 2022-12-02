@@ -1,4 +1,4 @@
-import { NestFactory } from '@nestjs/core'
+import { NestFactory, Reflector } from '@nestjs/core'
 import { AppModule } from './app.module'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 import * as cookieParser from 'cookie-parser'
@@ -7,7 +7,7 @@ import * as passport from 'passport'
 
 import { HttpResponseInterceptor } from './common/interceptors'
 import { ValidationPipe } from '@nestjs/common'
-// import { HttpExceptionFilter } from './common/filters'
+import { JwtAuthGuard } from './modules/auth/jwt/jwt-auth.guard'
 
 const isDevelopEnv = process['NODE_ENV'] === 'development'
 
@@ -39,6 +39,9 @@ async function bootstrap() {
 
   // 全局过滤器
   // app.useGlobalFilters(new HttpExceptionFilter())
+
+  // 全局鉴权守卫(jwt)
+  app.useGlobalGuards(new JwtAuthGuard(new Reflector()))
 
   app.use(cookieParser())
   app.use(session({ secret: 'SECRET' }))

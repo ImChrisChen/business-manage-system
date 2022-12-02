@@ -7,5 +7,5 @@
 import { User } from '../entities/user.entity'
 
 export type FindOneUserOptions = Partial<
-  Pick<User, 'id' | 'username' | 'phone' | 'email' | 'password'>
+  Pick<User, 'id' | 'username' | 'phone' | 'email' | 'password' | 'is_del'>
 >

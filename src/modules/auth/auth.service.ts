@@ -14,8 +14,7 @@ export class AuthService {
   ) {}
 
   async login(user) {
-    console.log(user)
-    debugger
+    console.log('user:', user)
     if (!user) {
       throw new SystemExceptionFilter(ResponseCodes.USER_NOT_EXIST)
     }
@@ -43,12 +42,14 @@ export class AuthService {
     username: string,
     password: string,
   ): Promise<Omit<User, 'password'>> {
-    const [user, pwd] = await this.userService.findOne({ username: username })
-    console.log('validateUser:', user)
-    debugger
+    const [user, pwd] = await this.userService.findOne({
+      username: username,
+      is_del: 0,
+    })
     if (!user) {
       throw new SystemExceptionFilter(ResponseCodes.USER_NOT_EXIST)
     }
+    // TODO 用户密码要加salt，salt如何设计
     const hashedPassword = sha256(password)
     if (user && pwd === hashedPassword) {
       Reflect.deleteProperty(user, 'password')

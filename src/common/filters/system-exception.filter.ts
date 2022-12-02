@@ -11,7 +11,7 @@ import { HttpException, HttpStatus } from '@nestjs/common'
  * 在拦截器中处理异常逻辑
  */
 export class SystemExceptionFilter extends HttpException {
-  public is_system_exception_error = true
+  public isSystemExceptionError = true
   constructor(options: [number, string] | any, data = {}, msg?: string) {
     const [code, defaultMsg] = options
     super(

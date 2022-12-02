@@ -5,7 +5,6 @@ import { UserModule } from './modules/user/user.module'
 import { GoodsModule } from './modules/goods/goods.module'
 import { RoleModule } from './modules/role/role.module'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { DataSource } from 'typeorm'
 import { PermissionModule } from './modules/permission/permission.module'
 import { AuthModule } from './modules/auth/auth.module'
 import { TodoModule } from './modules/todo/todo.module'
@@ -43,5 +42,5 @@ import { GoodsCategoryModule } from './modules/goods_category/goods_category.mod
   providers: [AppService],
 })
 export class AppModule {
-  constructor(private dataSource: DataSource) {}
+  constructor() {}
 }
