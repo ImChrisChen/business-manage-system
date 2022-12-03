@@ -4,12 +4,11 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 import * as cookieParser from 'cookie-parser'
 import * as session from 'express-session'
 import * as passport from 'passport'
-
 import { HttpResponseInterceptor } from './common/interceptors'
 import { ValidationPipe } from '@nestjs/common'
 import { JwtAuthGuard } from './modules/auth/jwt/jwt-auth.guard'
 
-const isDevelopEnv = process['NODE_ENV'] === 'development'
+const isDevelopEnv = process.env['NODE_ENV'] === 'development'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {

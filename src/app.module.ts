@@ -11,22 +11,28 @@ import { TodoModule } from './modules/todo/todo.module'
 import { BuynoteTypeModule } from './modules/buynote_type/buynote_type.module'
 import { BuynoteModule } from './modules/buynote/buynote.module'
 import { GoodsCategoryModule } from './modules/goods_category/goods_category.module'
+import * as process from 'process'
+import * as dotenv from 'dotenv'
+dotenv.config()
+
+const isDevelopment = process.env.NODE_ENV === 'development'
+const { DB_PORT, DB_HOST, DB_DATABASE, DB_PASSWORD, DB_USERNAME } = process.env
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'chrisorz.tpddns.cn',
-      port: 3306,
-      username: 'root',
-      password: 'rootadmin',
-      database: 'goods_store',
+      host: DB_HOST,
+      port: Number(DB_PORT),
+      username: DB_USERNAME,
+      password: DB_PASSWORD,
+      database: DB_DATABASE,
       // entities: [User],
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: isDevelopment,
+      logging: isDevelopment,
       retryDelay: 1500,
       retryAttempts: 10,
-      logging: true,
     }),
     UserModule,
     AuthModule,
