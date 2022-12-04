@@ -4,7 +4,6 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 import * as cookieParser from 'cookie-parser'
 import * as session from 'express-session'
 import * as passport from 'passport'
-import { HttpResponseInterceptor } from './common/interceptors'
 import { ValidationPipe } from '@nestjs/common'
 import { JwtAuthGuard } from './modules/auth/jwt/jwt-auth.guard'
 
@@ -34,7 +33,7 @@ async function bootstrap() {
   )
 
   // http-response 全局拦截器
-  app.useGlobalInterceptors(new HttpResponseInterceptor())
+  // app.useGlobalInterceptors(new HttpResponseInterceptor())
 
   // 全局过滤器
   // app.useGlobalFilters(new HttpExceptionFilter())
