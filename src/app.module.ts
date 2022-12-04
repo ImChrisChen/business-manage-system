@@ -13,10 +13,25 @@ import { BuynoteModule } from './modules/buynote/buynote.module'
 import { GoodsCategoryModule } from './modules/goods_category/goods_category.module'
 import * as process from 'process'
 import * as dotenv from 'dotenv'
+import { WINSTON_MODULE_NEST_PROVIDER, WinstonModule } from 'nest-winston'
+import * as winston from 'winston'
+import 'winston-daily-rotate-file'
+import { HttpResponseInterceptor } from './common/interceptors'
+import { LoggingInterceptor } from './common/interceptors/logging.interceptor'
+import { APP_INTERCEPTOR } from '@nestjs/core'
 dotenv.config()
 
 const isDevelopment = process.env.NODE_ENV === 'development'
 const { DB_PORT, DB_HOST, DB_DATABASE, DB_PASSWORD, DB_USERNAME } = process.env
+
+const transport = new winston.transports.DailyRotateFile({
+  filename: 'application-%DATE%.log',
+  datePattern: 'YYYY-MM-DD-HH',
+  zippedArchive: true,
+  maxSize: '20m',
+  maxFiles: '14d',
+  dirname: 'logs',
+})
 
 @Module({
   imports: [
@@ -34,6 +49,9 @@ const { DB_PORT, DB_HOST, DB_DATABASE, DB_PASSWORD, DB_USERNAME } = process.env
       retryDelay: 1500,
       retryAttempts: 10,
     }),
+    WinstonModule.forRoot({
+      transports: [transport],
+    }),
     UserModule,
     AuthModule,
     GoodsModule,
@@ -45,7 +63,17 @@ const { DB_PORT, DB_HOST, DB_DATABASE, DB_PASSWORD, DB_USERNAME } = process.env
     GoodsCategoryModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: HttpResponseInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor, // 全局请求日志拦截器
+    },
+  ],
 })
 export class AppModule {
   constructor() {}

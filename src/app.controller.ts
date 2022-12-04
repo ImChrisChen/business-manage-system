@@ -30,7 +30,7 @@ export class AppController {
   @SkipJwtAuth()
   @Get()
   getIndex() {
-    return new SkipHttpResponseFilter(process.versions)
+    return this.appService.getIndex()
   }
 
   @SkipJwtAuth()

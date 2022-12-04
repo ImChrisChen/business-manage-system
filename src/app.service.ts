@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common'
+import { SkipHttpResponseFilter } from './common/filters/skip-http-response.filter'
 
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'Hello World!'
+  getIndex() {
+    return new SkipHttpResponseFilter(process.versions)
   }
 }
