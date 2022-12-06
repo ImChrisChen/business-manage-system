@@ -1,16 +1,18 @@
 import {
   Body,
+  CacheInterceptor,
+  CacheKey,
+  CacheTTL,
   Controller,
   Get,
   Post,
   Req,
   Res,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common'
 import { AppService } from './app.service'
-import * as process from 'process'
 import { SkipJwtAuth } from './modules/auth/contants'
-import { SkipHttpResponseFilter } from './common/filters/skip-http-response.filter'
 import { Request, Response } from 'express'
 import { CreateUserDto } from './modules/user/dto/create-user.dto'
 import { AuthService } from './modules/auth/auth.service'
@@ -19,6 +21,7 @@ import { ResponseCodes } from './config'
 import { UserService } from './modules/user/user.service'
 import { AuthGuard } from '@nestjs/passport'
 
+@UseInterceptors(CacheInterceptor)
 @Controller()
 export class AppController {
   constructor(
@@ -27,6 +30,8 @@ export class AppController {
     private readonly userService: UserService,
   ) {}
 
+  // @CacheKey('index-model')
+  // @CacheTTL(10)
   @SkipJwtAuth()
   @Get()
   getIndex() {
