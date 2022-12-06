@@ -3,7 +3,7 @@ import { SkipHttpResponseFilter } from './common/filters/skip-http-response.filt
 
 @Injectable()
 export class AppService {
-  getIndex() {
+  async getIndex() {
     return new SkipHttpResponseFilter(process.versions)
   }
 }
