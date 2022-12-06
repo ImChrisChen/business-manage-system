@@ -24,7 +24,17 @@ import * as redisStore from 'cache-manager-redis-store'
 dotenv.config()
 
 const isDevelopment = process.env.NODE_ENV === 'development'
-const { DB_PORT, DB_HOST, DB_DATABASE, DB_PASSWORD, DB_USERNAME } = process.env
+const {
+  DB_PORT,
+  DB_HOST,
+  DB_DATABASE,
+  DB_PASSWORD,
+  DB_USERNAME,
+  REDIS_HOST,
+  REDIS_PORT,
+} = process.env
+
+console.log(REDIS_HOST, REDIS_PORT)
 
 const transport = new winston.transports.DailyRotateFile({
   filename: 'application-%DATE%.log',
@@ -55,12 +65,12 @@ const transport = new winston.transports.DailyRotateFile({
       transports: [transport],
     }),
     CacheModule.register({
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+      host: REDIS_HOST,
+      port: Number(REDIS_PORT),
       store: redisStore,
-      host: 'chrisorz.tpddns.cn',
-      port: 6379,
-      ttl: 2000, // 单位 s ，key的过期时间
+      ttl: 60 * 60 * 24, // s
+      max: 100, // 最大缓存数量
+      isGlobal: true,
     }),
     UserModule,
     AuthModule,
