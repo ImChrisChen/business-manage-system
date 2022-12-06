@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common'
+import { Module, CacheModule, CacheInterceptor } from '@nestjs/common'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { UserModule } from './modules/user/user.module'
@@ -13,16 +13,28 @@ import { BuynoteModule } from './modules/buynote/buynote.module'
 import { GoodsCategoryModule } from './modules/goods_category/goods_category.module'
 import * as process from 'process'
 import * as dotenv from 'dotenv'
-import { WINSTON_MODULE_NEST_PROVIDER, WinstonModule } from 'nest-winston'
+import { WinstonModule } from 'nest-winston'
 import * as winston from 'winston'
 import 'winston-daily-rotate-file'
 import { HttpResponseInterceptor } from './common/interceptors'
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor'
 import { APP_INTERCEPTOR } from '@nestjs/core'
+import * as redisStore from 'cache-manager-redis-store'
+
 dotenv.config()
 
 const isDevelopment = process.env.NODE_ENV === 'development'
-const { DB_PORT, DB_HOST, DB_DATABASE, DB_PASSWORD, DB_USERNAME } = process.env
+const {
+  DB_PORT,
+  DB_HOST,
+  DB_DATABASE,
+  DB_PASSWORD,
+  DB_USERNAME,
+  REDIS_HOST,
+  REDIS_PORT,
+} = process.env
+
+console.log(REDIS_HOST, REDIS_PORT)
 
 const transport = new winston.transports.DailyRotateFile({
   filename: 'application-%DATE%.log',
@@ -52,6 +64,14 @@ const transport = new winston.transports.DailyRotateFile({
     WinstonModule.forRoot({
       transports: [transport],
     }),
+    CacheModule.register({
+      host: REDIS_HOST,
+      port: Number(REDIS_PORT),
+      store: redisStore,
+      ttl: 60 * 60 * 24, // s
+      max: 100, // 最大缓存数量
+      isGlobal: true,
+    }),
     UserModule,
     AuthModule,
     GoodsModule,
@@ -72,6 +92,10 @@ const transport = new winston.transports.DailyRotateFile({
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor, // 全局请求日志拦截器
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CacheInterceptor,
     },
   ],
 })

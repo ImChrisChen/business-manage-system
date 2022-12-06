@@ -1,16 +1,20 @@
 import {
   Body,
+  CACHE_MANAGER,
+  CacheInterceptor,
+  CacheKey,
+  CacheTTL,
   Controller,
   Get,
+  Inject,
   Post,
   Req,
   Res,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common'
 import { AppService } from './app.service'
-import * as process from 'process'
 import { SkipJwtAuth } from './modules/auth/contants'
-import { SkipHttpResponseFilter } from './common/filters/skip-http-response.filter'
 import { Request, Response } from 'express'
 import { CreateUserDto } from './modules/user/dto/create-user.dto'
 import { AuthService } from './modules/auth/auth.service'
@@ -18,6 +22,7 @@ import { SystemExceptionFilter } from './common/filters/system-exception.filter'
 import { ResponseCodes } from './config'
 import { UserService } from './modules/user/user.service'
 import { AuthGuard } from '@nestjs/passport'
+import { Cache } from 'cache-manager'
 
 @Controller()
 export class AppController {
@@ -25,12 +30,27 @@ export class AppController {
     private readonly appService: AppService,
     private readonly authService: AuthService,
     private readonly userService: UserService,
+    @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {}
 
+  // @CacheKey('index-model')
+  // @CacheTTL(10)
+  @UseInterceptors(CacheInterceptor)
   @SkipJwtAuth()
   @Get()
-  getIndex() {
-    return this.appService.getIndex()
+  async getIndex() {
+    // const value = await this.cache.get('index')
+    // console.log(value)
+    // if (value) {
+    //   return value
+    // }
+    //
+    // await this.cache.set('index', '1000000000000')
+
+    return {
+      value: '1000000000000',
+    }
+    // return this.appService.getIndex()
   }
 
   @SkipJwtAuth()
