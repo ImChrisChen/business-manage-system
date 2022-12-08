@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "publish": "bash ./scripts/publish.sh",
+    "release": "bash ./scripts/release.sh",
     "prepare": "npx husky install",
     "prebuild": "rimraf dist",
     "build": "nest build",
