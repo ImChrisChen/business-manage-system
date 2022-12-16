@@ -11,8 +11,6 @@ import { TodoModule } from './modules/todo/todo.module'
 import { BuynoteTypeModule } from './modules/buynote_type/buynote_type.module'
 import { BuynoteModule } from './modules/buynote/buynote.module'
 import { GoodsCategoryModule } from './modules/goods_category/goods_category.module'
-import * as process from 'process'
-import * as dotenv from 'dotenv'
 import { WinstonModule } from 'nest-winston'
 import * as winston from 'winston'
 import 'winston-daily-rotate-file'
@@ -20,10 +18,8 @@ import { HttpResponseInterceptor } from './common/interceptors'
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor'
 import { APP_INTERCEPTOR } from '@nestjs/core'
 import * as redisStore from 'cache-manager-redis-store'
+import { env, isDevelopment } from './config/env'
 
-dotenv.config()
-
-const isDevelopment = process.env.NODE_ENV === 'development'
 const {
   DB_PORT,
   DB_HOST,
@@ -32,7 +28,7 @@ const {
   DB_USERNAME,
   REDIS_HOST,
   REDIS_PORT,
-} = process.env
+} = env
 
 console.log(REDIS_HOST, REDIS_PORT)
 

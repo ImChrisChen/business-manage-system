@@ -6,12 +6,11 @@ import * as session from 'express-session'
 import * as passport from 'passport'
 import { ValidationPipe } from '@nestjs/common'
 import { JwtAuthGuard } from './modules/auth/jwt/jwt-auth.guard'
-
-const isDevelopEnv = process.env['NODE_ENV'] === 'development'
+import { isDevelopment } from './config/env'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    logger: ['error', 'warn', isDevelopEnv ? 'debug' : undefined],
+    logger: ['error', 'warn', isDevelopment ? 'debug' : undefined],
   })
 
   // 设置 Swagger文档
