@@ -58,6 +58,7 @@ const transport = new winston.transports.DailyRotateFile({
       autoLoadEntities: true,
       synchronize: isDevelopment,
       logging: isDevelopment,
+      connectTimeout: 60 * 1000,
       retryDelay: 1500,
       retryAttempts: 10,
     }),
