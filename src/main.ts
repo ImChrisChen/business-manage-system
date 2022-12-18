@@ -19,7 +19,7 @@ async function bootstrap() {
     .setVersion('1.0')
     .build()
   const document = SwaggerModule.createDocument(app, options)
-  SwaggerModule.setup('api', app, document)
+  SwaggerModule.setup('docs', app, document)
 
   // 全局前缀
   app.setGlobalPrefix('/api/v1')
@@ -38,7 +38,7 @@ async function bootstrap() {
   // app.useGlobalFilters(new HttpExceptionFilter())
 
   // 全局鉴权守卫(jwt)
-  app.useGlobalGuards(new JwtAuthGuard(new Reflector()))
+  // app.useGlobalGuards(new JwtAuthGuard(new Reflector()))
 
   app.use(cookieParser())
   app.use(session({ secret: 'SECRET' }))

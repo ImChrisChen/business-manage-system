@@ -90,10 +90,10 @@ const transport = new winston.transports.DailyRotateFile({
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor, // 全局请求日志拦截器
     },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: CacheInterceptor,
-    },
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   useClass: CacheInterceptor,
+    // },
   ],
 })
 export class AppModule {

@@ -1,9 +1,6 @@
 import {
   Body,
   CACHE_MANAGER,
-  CacheInterceptor,
-  CacheKey,
-  CacheTTL,
   Controller,
   Get,
   Inject,
@@ -11,7 +8,6 @@ import {
   Req,
   Res,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common'
 import { AppService } from './app.service'
 import { SkipJwtAuth } from './modules/auth/contants'
@@ -35,22 +31,11 @@ export class AppController {
 
   // @CacheKey('index-model')
   // @CacheTTL(10)
-  @UseInterceptors(CacheInterceptor)
+  // @UseInterceptors(CacheInterceptor)
   @SkipJwtAuth()
   @Get()
   async getIndex() {
-    // const value = await this.cache.get('index')
-    // console.log(value)
-    // if (value) {
-    //   return value
-    // }
-    //
-    // await this.cache.set('index', '1000000000000')
-
-    return {
-      value: '1000000000000',
-    }
-    // return this.appService.getIndex()
+    return this.appService.getIndex()
   }
 
   @SkipJwtAuth()

@@ -7,12 +7,15 @@ import {
   Param,
   Delete,
   Query,
+  UseInterceptors,
+  CacheInterceptor,
 } from '@nestjs/common'
 import { GoodsService } from './goods.service'
 import { CreateGoodsDto } from './dto/create-goods.dto'
 import { UpdateGoodsDto } from './dto/update-goods.dto'
 import { QueryGoodsDto } from './dto/query-goods.dto'
 
+@UseInterceptors(CacheInterceptor)
 @Controller('goods')
 export class GoodsController {
   constructor(private readonly goodsService: GoodsService) {}
