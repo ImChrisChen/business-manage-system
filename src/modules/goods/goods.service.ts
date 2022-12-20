@@ -5,18 +5,19 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Goods } from './entities/good.entity'
 import { Like, Repository } from 'typeorm'
 import { QueryGoodsDto } from './dto/query-goods.dto'
+import { CacheService } from '../cache/cache.service'
 
 @Injectable()
 export class GoodsService {
   constructor(
-    @InjectRepository(Goods)
-    private readonly repository: Repository<Goods>,
+    @InjectRepository(Goods) private readonly repository: Repository<Goods>,
+    private readonly cacheService: CacheService,
   ) {}
   create(createGoodDto: CreateGoodsDto) {
     return this.repository.insert(createGoodDto)
   }
 
-  findAll(query: QueryGoodsDto) {
+  findAll(query?: QueryGoodsDto) {
     return this.repository
       .createQueryBuilder()
       .setFindOptions({
@@ -29,18 +30,30 @@ export class GoodsService {
       .getMany()
   }
 
-  findOne(id: number) {
-    return this.repository.find({
+  async findOne(id: number) {
+    const key = this.cacheService.genKey('goods', id)
+    const cacheItem = await this.cacheService.get(key)
+    if (cacheItem) {
+      return cacheItem
+    }
+    const item = await this.repository.findOne({
       where: { id },
       relations: ['goods_category'],
     })
+    item && (await this.cacheService.set(key, item))
+    return item
   }
 
-  update(id: number, updateGoodDto: UpdateGoodsDto) {
-    return this.repository.update(id, updateGoodDto)
+  async update(id: number, updateGoodDto: UpdateGoodsDto) {
+    const item = await this.repository.update(id, updateGoodDto)
+    const key = this.cacheService.genKey('goods', id)
+    await this.cacheService.del(key)
+    return item
   }
 
-  remove(id: number) {
+  async remove(id: number) {
+    const key = this.cacheService.genKey('goods', id)
+    await this.cacheService.del(key)
     return this.repository.delete(id)
   }
 }

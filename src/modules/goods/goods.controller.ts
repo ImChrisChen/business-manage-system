@@ -7,15 +7,13 @@ import {
   Param,
   Delete,
   Query,
-  UseInterceptors,
-  CacheInterceptor,
+  ParseIntPipe,
 } from '@nestjs/common'
 import { GoodsService } from './goods.service'
 import { CreateGoodsDto } from './dto/create-goods.dto'
 import { UpdateGoodsDto } from './dto/update-goods.dto'
 import { QueryGoodsDto } from './dto/query-goods.dto'
 
-@UseInterceptors(CacheInterceptor)
 @Controller('goods')
 export class GoodsController {
   constructor(private readonly goodsService: GoodsService) {}
@@ -26,13 +24,13 @@ export class GoodsController {
   }
 
   @Get()
-  findAll(@Query() query: QueryGoodsDto) {
+  findAll(@Query() query?: QueryGoodsDto) {
     return this.goodsService.findAll(query)
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.goodsService.findOne(+id)
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.goodsService.findOne(id)
   }
 
   @Patch(':id')

@@ -1,4 +1,4 @@
-import { Module, CacheModule, CacheInterceptor } from '@nestjs/common'
+import { Module, CacheModule } from '@nestjs/common'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { UserModule } from './modules/user/user.module'
@@ -19,6 +19,7 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor'
 import { APP_INTERCEPTOR } from '@nestjs/core'
 import * as redisStore from 'cache-manager-redis-store'
 import { env, isDevelopment } from './config/env'
+import { CacheService } from './modules/cache/cache.service'
 
 const {
   DB_PORT,

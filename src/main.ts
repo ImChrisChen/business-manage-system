@@ -25,11 +25,11 @@ async function bootstrap() {
   app.setGlobalPrefix('/api/v1')
 
   // 全局管道验证器(配置class-validator 类验证装饰器一起使用)
-  app.useGlobalPipes(
-    new ValidationPipe({
-      disableErrorMessages: false,
-    }),
-  )
+  // app.useGlobalPipes(
+  //   new ValidationPipe({
+  //     disableErrorMessages: false,
+  //   }),
+  // )
 
   // http-response 全局拦截器
   // app.useGlobalInterceptors(new HttpResponseInterceptor())
