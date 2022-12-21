@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinTable,
   ManyToMany,
   OneToMany,
   PrimaryColumn,
@@ -46,5 +47,16 @@ export class User {
 
   // 一个用户可以拥有多个角色，一个角色也可以分配给不同用户
   @ManyToMany(() => Role, (role) => role.users)
+  @JoinTable({
+    name: 'role_to_user',
+    joinColumn: {
+      name: 'user_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'role_id',
+      referencedColumnName: 'id',
+    },
+  })
   roles: Array<Role>
 }

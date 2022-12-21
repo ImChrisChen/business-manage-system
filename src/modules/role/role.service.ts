@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { CreateRoleDto } from './dto/create-role.dto'
 import { UpdateRoleDto } from './dto/update-role.dto'
 import { Repository } from 'typeorm'
@@ -21,11 +21,42 @@ export class RoleService {
   }
 
   findAll() {
-    return this.roleRepository.createQueryBuilder().getMany()
+    return this.roleRepository
+      .createQueryBuilder()
+      .setFindOptions({
+        relations: ['permissions'],
+      })
+      .getMany()
+      .then((list) => {
+        return list.map((item) => {
+          const permissions = item.permissions.map(
+            (it) => `${it.permission}.${it.permission_type}`,
+          )
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          item.permissions = permissions
+          return item
+        })
+      })
   }
 
   findOne(id: number) {
-    return this.roleRepository.createQueryBuilder().where({ id: id }).getOne()
+    return this.roleRepository
+      .createQueryBuilder()
+      .setFindOptions({
+        relations: ['permissions'],
+      })
+      .where({ id: id })
+      .getOne()
+      .then((res) => {
+        const permissions = res.permissions.map(
+          (item) => `${item.permission}.${item.permission_type}`,
+        )
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        res.permissions = permissions
+        return res
+      })
   }
 
   update(id: number, updateRoleDto: UpdateRoleDto) {

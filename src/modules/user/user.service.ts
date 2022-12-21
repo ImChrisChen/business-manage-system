@@ -50,7 +50,16 @@ export class UserService {
   async findOne(
     where: FindOneUserOptions,
   ): Promise<[Omit<User, 'password'>, string]> {
-    const user = await this.repository.findOneBy({ ...where, is_del: 0 })
+    const user = await this.repository
+      .createQueryBuilder()
+      .setFindOptions({
+        relations: ['roles'],
+      })
+      .where({
+        ...where,
+        is_del: 0,
+      })
+      .getOne()
     if (!user) {
       throw new SystemExceptionFilter(ResponseCodes.USER_NOT_EXIST)
     }

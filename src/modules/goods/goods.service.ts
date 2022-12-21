@@ -13,6 +13,7 @@ export class GoodsService {
     @InjectRepository(Goods) private readonly repository: Repository<Goods>,
     private readonly cacheService: CacheService,
   ) {}
+
   create(createGoodDto: CreateGoodsDto) {
     return this.repository.insert(createGoodDto)
   }
@@ -30,11 +31,11 @@ export class GoodsService {
       .getMany()
   }
 
-  async findOne(id: number) {
-    const key = this.cacheService.genKey('goods', id)
-    const cacheItem = await this.cacheService.get(key)
-    if (cacheItem) {
-      return cacheItem
+  async findOne(id: number, user) {
+    const key = this.cacheService.genKey('goods', id, user.userId)
+    const cache = await this.cacheService.get(key)
+    if (cache) {
+      return cache
     }
     const item = await this.repository.findOne({
       where: { id },
@@ -44,15 +45,14 @@ export class GoodsService {
     return item
   }
 
-  async update(id: number, updateGoodDto: UpdateGoodsDto) {
-    const item = await this.repository.update(id, updateGoodDto)
-    const key = this.cacheService.genKey('goods', id)
+  async update(id: number, updateGoodDto: UpdateGoodsDto, user) {
+    const key = this.cacheService.genKey('goods', id, user.userId)
     await this.cacheService.del(key)
-    return item
+    return this.repository.update(id, updateGoodDto)
   }
 
-  async remove(id: number) {
-    const key = this.cacheService.genKey('goods', id)
+  async remove(id: number, user) {
+    const key = this.cacheService.genKey('goods', id, user.userId)
     await this.cacheService.del(key)
     return this.repository.delete(id)
   }

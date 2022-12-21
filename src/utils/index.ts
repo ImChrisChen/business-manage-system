@@ -7,3 +7,4 @@
 
 export * from './inspect'
 export * from './hash'
+export * from './helpers'

@@ -1,5 +1,6 @@
 import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common'
 import { Cache } from 'cache-manager'
+import { genCacheKey } from '../../utils'
 
 @Injectable()
 export class CacheService {
@@ -9,10 +10,14 @@ export class CacheService {
    * 生成key
    * @param entityName 实体名称
    * @param itemId 列id
+   * @param uid 用户ID,有则代表私有缓存
    */
-  genKey(entityName: string, itemId?: number | string): string {
-    const projectName = 'BusinessManageSystem'
-    return `${projectName}_${entityName}${itemId ? '_' + itemId : ''}`
+  genKey(
+    entityName: string,
+    itemId?: number | string,
+    uid?: string | number,
+  ): string {
+    return genCacheKey(entityName, itemId, uid)
   }
 
   async get(key: string) {

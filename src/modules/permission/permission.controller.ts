@@ -13,30 +13,33 @@ import { UpdatePermissionDto } from './dto/update-permission.dto'
 
 @Controller('permission')
 export class PermissionController {
-  constructor(private readonly authService: PermissionService) {}
+  constructor(private readonly permissionService: PermissionService) {}
 
   @Post()
-  create(@Body() createAuthDto: CreatePermissionDto) {
-    return this.authService.create(createAuthDto)
+  create(@Body() createPermissionDto: CreatePermissionDto) {
+    return this.permissionService.create(createPermissionDto)
   }
 
   @Get()
   findAll() {
-    return this.authService.findAll()
+    return this.permissionService.findAll()
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id)
+    return this.permissionService.findOne(+id)
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdatePermissionDto) {
-    return this.authService.update(+id, updateAuthDto)
+  update(
+    @Param('id') id: string,
+    @Body() updatePermissionDto: UpdatePermissionDto,
+  ) {
+    return this.permissionService.update(+id, updatePermissionDto)
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.authService.remove(+id)
+    return this.permissionService.remove(+id)
   }
 }

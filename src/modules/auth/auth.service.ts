@@ -5,7 +5,6 @@ import { sha256 } from '../../utils'
 import { JwtService } from '@nestjs/jwt'
 import { SystemExceptionFilter } from '../../common/filters/system-exception.filter'
 import { ResponseCodes } from '../../config'
-import { Logger } from 'winston'
 
 @Injectable()
 export class AuthService {

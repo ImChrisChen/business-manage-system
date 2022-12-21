@@ -16,7 +16,14 @@ export class PermissionService {
   }
 
   findAll() {
-    return this.repository.createQueryBuilder().getMany()
+    return (
+      this.repository
+        .createQueryBuilder()
+        // .setFindOptions({
+        //   relations: ['roles'],
+        // })
+        .getMany()
+    )
   }
 
   findOne(id: number) {

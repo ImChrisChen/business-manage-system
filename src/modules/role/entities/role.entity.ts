@@ -17,8 +17,8 @@ export class Role extends BasicFieldEntity {
   @Column()
   role: string
 
-  @Column()
-  role_name: string
+  // @Column()
+  // role_name: string
 
   @Column({ default: 0 })
   pid: number

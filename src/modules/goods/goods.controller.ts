@@ -8,12 +8,16 @@ import {
   Delete,
   Query,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common'
 import { GoodsService } from './goods.service'
 import { CreateGoodsDto } from './dto/create-goods.dto'
 import { UpdateGoodsDto } from './dto/update-goods.dto'
 import { QueryGoodsDto } from './dto/query-goods.dto'
+import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard'
+import { User } from '../../common/decorators'
 
+@UseGuards(JwtAuthGuard)
 @Controller('goods')
 export class GoodsController {
   constructor(private readonly goodsService: GoodsService) {}
@@ -29,17 +33,21 @@ export class GoodsController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.goodsService.findOne(id)
+  async findOne(@Param('id', ParseIntPipe) id: number, @User() user) {
+    return this.goodsService.findOne(id, user)
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGoodDto: UpdateGoodsDto) {
-    return this.goodsService.update(+id, updateGoodDto)
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateGoodDto: UpdateGoodsDto,
+    @User() user,
+  ) {
+    return this.goodsService.update(id, updateGoodDto, user)
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.goodsService.remove(+id)
+  remove(@Param('id', ParseIntPipe) id: number, @User() user) {
+    return this.goodsService.remove(id, user)
   }
 }
