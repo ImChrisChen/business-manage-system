@@ -13,6 +13,10 @@ async function bootstrap() {
     logger: ['error', 'warn', isDevelopment ? 'debug' : undefined],
   })
 
+  app.enableCors({
+    origin: [/http:\/\/127.0.0.1:*/, /http:\/\/chrisorz.tpddns.cn:*/],
+  })
+
   // 设置 Swagger文档
   const options = new DocumentBuilder()
     .setTitle('Goods Store Api v1')
