@@ -35,8 +35,10 @@ jobs:
         uses: actions-js/push@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          message: "chore(ci/cd): 自动化构建,当前项目版本: ${{ env.project_version }}"
           amend: true
+          message: "chore(ci/cd): 自动化构建,当前项目版本:${{ env.project_version }}"
+          branch: 'master'
+
 
       - name: login to docker-hub
         uses: docker/login-action@v2
