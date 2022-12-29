@@ -42,7 +42,7 @@ jobs:
         uses: docker/login-action@v2
         with:
           username: imchrisorz
-          password: ${{ secrets.DOCKER_SECRET }}
+          password: dckr_pat_UUoUPBvOuTi1_RQWsjdbqSUiZOA
 
       - name: build docker image and push
         run: |
