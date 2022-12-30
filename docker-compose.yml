@@ -6,3 +6,11 @@ services:
     ports:
       - "3003:3003"
     container_name: "business-manage-system"
+  front:
+    image: "imchrisorz/business-manage-web:latest"
+    restart: always
+    ports:
+      - "3004:3004"
+    container_name: "business-manage-web"
+    volumes:
+      - "./.env"
