@@ -6,11 +6,13 @@ services:
     ports:
       - "3003:3003"
     container_name: "business-manage-system"
+    volumes:
+      - "/data/env/.env:/app/.env"  # 宿主机:Docker镜像 和Dockerfile中的路径一样
+      - "/data/log/business-manage-system/logs:/app/logs"
+
   front:
     image: "imchrisorz/business-manage-web:latest"
     restart: always
     ports:
       - "3004:3004"
     container_name: "business-manage-web"
-    volumes:
-      - "./.env"
