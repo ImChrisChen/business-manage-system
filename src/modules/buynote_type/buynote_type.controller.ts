@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Inject,
 } from '@nestjs/common'
 import { BuynoteTypeService } from './buynote_type.service'
 import { CreateBuynoteTypeDto } from './dto/create-buynote_type.dto'

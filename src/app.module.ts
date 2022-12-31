@@ -19,7 +19,6 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor'
 import { APP_INTERCEPTOR } from '@nestjs/core'
 import * as redisStore from 'cache-manager-redis-store'
 import { env, isDevelopment } from './config/env'
-import { CacheService } from './modules/cache/cache.service'
 
 const {
   DB_PORT,

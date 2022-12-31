@@ -1,6 +1,6 @@
-import { Buynote } from 'src/modules/buynote/entities/buynote.entity'
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import { BasicFieldEntity } from '../../../common/entities'
+import { Buynote } from '../../buynote/entities/buynote.entity'
 
 @Entity()
 export class BuynoteType extends BasicFieldEntity {
