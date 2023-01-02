@@ -15,7 +15,7 @@ import { CreateGoodsDto } from './dto/create-goods.dto'
 import { UpdateGoodsDto } from './dto/update-goods.dto'
 import { QueryGoodsDto } from './dto/query-goods.dto'
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard'
-import { User } from '../../common/decorators'
+import { GetUser } from '../../common/decorators'
 
 @UseGuards(JwtAuthGuard)
 @Controller('goods')
@@ -33,7 +33,7 @@ export class GoodsController {
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number, @User() user) {
+  async findOne(@Param('id', ParseIntPipe) id: number, @GetUser() user) {
     return this.goodsService.findOne(id, user)
   }
 
@@ -41,13 +41,13 @@ export class GoodsController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateGoodDto: UpdateGoodsDto,
-    @User() user,
+    @GetUser() user,
   ) {
     return this.goodsService.update(id, updateGoodDto, user)
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number, @User() user) {
+  remove(@Param('id', ParseIntPipe) id: number, @GetUser() user) {
     return this.goodsService.remove(id, user)
   }
 }

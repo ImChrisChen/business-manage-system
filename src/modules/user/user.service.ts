@@ -28,7 +28,7 @@ export class UserService {
       throw new SystemExceptionFilter(ResponseCodes.USER_IS_REGISTERED)
     }
 
-    let newUser = await this.repository.create({
+    let newUser = this.repository.create({
       username: username,
       password: hashPassword,
       role_id: 1,

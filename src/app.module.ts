@@ -19,7 +19,7 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor'
 import { APP_INTERCEPTOR } from '@nestjs/core'
 import * as redisStore from 'cache-manager-redis-store'
 import { env, isDevelopment } from './config/env'
-import { CacheService } from './modules/cache/cache.service'
+import { UserLoginLogModule } from './modules/user_login_log/user_login_log.module'
 
 const {
   DB_PORT,
@@ -30,8 +30,6 @@ const {
   REDIS_HOST,
   REDIS_PORT,
 } = env
-
-console.log(REDIS_HOST, REDIS_PORT)
 
 const transport = new winston.transports.DailyRotateFile({
   filename: 'application-%DATE%.log',
@@ -79,6 +77,7 @@ const transport = new winston.transports.DailyRotateFile({
     BuynoteTypeModule,
     BuynoteModule,
     GoodsCategoryModule,
+    UserLoginLogModule,
   ],
   controllers: [AppController],
   providers: [

@@ -5,22 +5,45 @@ import {
   Patch,
   Param,
   Delete,
-  Req,
   Res,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common'
 import { UserService } from './user.service'
 import { UpdateUserDto } from './dto/update-user.dto'
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { SystemExceptionFilter } from '../../common/filters/system-exception.filter'
 import { ResponseCodes } from '../../config'
+import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard'
+import { GetUser } from '../../common/decorators'
+import { PermissionService } from '../permission/permission.service'
 
+@UseGuards(JwtAuthGuard)
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly permissionService: PermissionService,
+  ) {}
+
+  @Get('/userinfo')
+  getUserInfo(@GetUser() user) {
+    return this.userService
+      .findOne({
+        id: user.userId,
+      })
+      .then(async ([userInfo]) => {
+        // let permissions = await this.permissionService.findAll({
+        //   role_id: userInfo.role_id,
+        // })
+        // permissions = permissions.map((item) => item['permission_name'])
+        // userInfo['permissions'] = permissions
+        return userInfo
+      })
+  }
 
   @Get()
-  getUsers(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+  getUsers(@Res({ passthrough: true }) res: Response) {
     return this.userService.findAll()
   }
 

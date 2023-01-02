@@ -5,25 +5,49 @@ import { sha256 } from '../../utils'
 import { JwtService } from '@nestjs/jwt'
 import { SystemExceptionFilter } from '../../common/filters/system-exception.filter'
 import { ResponseCodes } from '../../config'
+import { UserLoginLogService } from '../user_login_log/user_login_log.service'
+import { CreateUserLoginLogDto } from '../user_login_log/dto/create-userloginlog.dto'
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly userLoginLogService: UserLoginLogService,
   ) {}
 
-  async login(user) {
+  async login(user, { ip, userAgent }) {
     console.log('user:', user)
+    console.log('ip:', ip)
+    const log: CreateUserLoginLogDto = {
+      login_way: 'username_password', // TODO 登录方式待写入JWT判断
+      client_ip: ip,
+      user_agent: userAgent,
+      login_status: 1,
+      device: '',
+      platform: '',
+    }
+
     if (!user) {
+      // log.login_status = 0 // 登录失败
+      // await this.userLoginLogService.create(user.userId, log)
       throw new SystemExceptionFilter(ResponseCodes.USER_NOT_EXIST)
     }
+
     const accessToken = this.genAccessToken({
       username: user.username,
       id: user.id,
     })
     user['access_token'] = accessToken
+    await this.userLoginLogService.create(user.id, log)
     return user
+  }
+
+  async logout(user) {
+    const date = new Date()
+    const logout_time =
+      date.toLocaleDateString().split('/').join('-') + date.toLocaleTimeString()
+    return this.userLoginLogService.update(user.userId, { logout_time })
   }
 
   /**

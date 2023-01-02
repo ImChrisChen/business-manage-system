@@ -15,7 +15,8 @@ export class GoodsService {
   ) {}
 
   create(createGoodDto: CreateGoodsDto) {
-    return this.repository.insert(createGoodDto)
+    const newGoods = this.repository.create(createGoodDto)
+    return this.repository.save(newGoods)
   }
 
   findAll(query?: QueryGoodsDto) {

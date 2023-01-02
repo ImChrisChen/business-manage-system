@@ -19,6 +19,7 @@ import { ResponseCodes } from './config'
 import { UserService } from './modules/user/user.service'
 import { AuthGuard } from '@nestjs/passport'
 import { Cache } from 'cache-manager'
+import { GetClientIp, GetUser, GetUserAgent } from './common/decorators'
 
 @Controller()
 export class AppController {
@@ -55,18 +56,22 @@ export class AppController {
     @Body() body: CreateUserDto,
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
+    @GetClientIp() ip: string,
+    @GetUserAgent() userAgent: string,
   ) {
-    const user = await this.authService.login(req.user)
-    res.cookie('access_token', user['access_token'], {
-      maxAge: Date.now() + 1000 * 60,
-      httpOnly: true,
+    return this.authService.login(req.user, { ip, userAgent }).then((user) => {
+      res.cookie('access_token', user['access_token'], {
+        maxAge: Date.now() + 1000 * 60,
+        httpOnly: true,
+      })
+      return user
     })
-    return user
   }
 
   @SkipJwtAuth()
   @Post('/logout')
-  logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+  async logout(@Res({ passthrough: true }) res: Response /*@GetUser() user */) {
+    // this.authService.logout(user)
     res.cookie('access_token', '')
   }
 }
