@@ -6,6 +6,7 @@ import { BuynoteType } from './entities/buynote_type.entity'
 import { InjectRepository } from '@nestjs/typeorm'
 import { SystemExceptionFilter } from '../../common/filters/system-exception.filter'
 import { ResponseCodes } from '../../config'
+import { listToTree } from '../../utils'
 
 @Injectable()
 export class BuynoteTypeService {
@@ -19,11 +20,17 @@ export class BuynoteTypeService {
     return this.repository.save(type)
   }
 
-  findAll() {
-    return this.repository
+  async findAll() {
+    const list = await this.repository
       .createQueryBuilder()
       .setFindOptions({ relations: ['buynotes'] })
       .getMany()
+    const treeList = listToTree(list, {
+      id: 'id',
+      pid: 'pid',
+      children: 'children',
+    })
+    return treeList
   }
 
   async findOne(id: number) {
