@@ -23,7 +23,7 @@ export class BuynoteService {
     return this.repository
       .createQueryBuilder()
       .setFindOptions({
-        relations: ['type'],
+        // relations: ['type'],
       })
       .getMany()
   }

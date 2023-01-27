@@ -5,13 +5,11 @@ import {
   Patch,
   Param,
   Delete,
-  Res,
   ParseIntPipe,
   UseGuards,
 } from '@nestjs/common'
 import { UserService } from './user.service'
 import { UpdateUserDto } from './dto/update-user.dto'
-import { Response } from 'express'
 import { SystemExceptionFilter } from '../../common/filters/system-exception.filter'
 import { ResponseCodes } from '../../config'
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard'
@@ -43,7 +41,7 @@ export class UserController {
   }
 
   @Get()
-  getUsers(@Res({ passthrough: true }) res: Response) {
+  getUsers() {
     return this.userService.findAll()
   }
 
