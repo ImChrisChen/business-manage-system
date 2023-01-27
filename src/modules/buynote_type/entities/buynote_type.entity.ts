@@ -7,14 +7,19 @@ export class BuynoteType extends BasicFieldEntity {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column()
+  @Column({ nullable: false })
   type_name: string
 
-  @Column()
+  @Column({ nullable: false, default: 0 })
   pid: number
 
-  @Column()
-  path: string
+  // @Column({
+  //   comment:
+  //     '父级ID的路径, .分割, 例如：0.0.2, 代表上级的ID id:1 => id: 10 => id:13',
+  //   default: '',
+  //   nullable: true,
+  // })
+  // path: string
 
   @OneToMany((type) => Buynote, (buynote) => buynote.type)
   buynotes: Array<Buynote>

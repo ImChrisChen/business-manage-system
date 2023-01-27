@@ -1,1 +1,4 @@
-export class CreateBuynoteTypeDto {}
+export class CreateBuynoteTypeDto {
+  type_name: string
+  pid: number
+}
