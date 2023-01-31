@@ -10,5 +10,5 @@ export class CreateUserLoginLogDto {
 }
 
 export class UpdateUserLoginLogDto {
-  logout_time: string
+  logout_time: Date
 }

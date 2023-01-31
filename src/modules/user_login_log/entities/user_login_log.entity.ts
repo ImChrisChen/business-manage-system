@@ -24,10 +24,7 @@ export class UserLoginLog {
   client_ip: string
 
   @CreateDateColumn({ nullable: true, type: 'timestamp' })
-  login_time: string
-
-  @Column({ type: 'timestamp' })
-  logout_time: string
+  login_time: Date
 
   @Column()
   user_agent: string

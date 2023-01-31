@@ -2,10 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { UserLoginLog } from './entities/user_login_log.entity'
 import { Repository } from 'typeorm'
-import {
-  CreateUserLoginLogDto,
-  UpdateUserLoginLogDto,
-} from './dto/create-userloginlog.dto'
+import { CreateUserLoginLogDto } from './dto/create-userloginlog.dto'
 
 @Injectable()
 export class UserLoginLogService {
@@ -28,12 +25,6 @@ export class UserLoginLogService {
       user_id: user_id,
       ...body,
     })
-    return this.repository.save(log)
-  }
-
-  async update(user_id: number, { logout_time }: UpdateUserLoginLogDto) {
-    const log = await this.repository.findOne({ where: { user_id } })
-    log.logout_time = logout_time
     return this.repository.save(log)
   }
 }

@@ -43,13 +43,6 @@ export class AuthService {
     return user
   }
 
-  async logout(user) {
-    const date = new Date()
-    const logout_time =
-      date.toLocaleDateString().split('/').join('-') + date.toLocaleTimeString()
-    return this.userLoginLogService.update(user.userId, { logout_time })
-  }
-
   /**
    * 生成 access_token
    * @param user

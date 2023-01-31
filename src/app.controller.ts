@@ -70,8 +70,7 @@ export class AppController {
 
   @SkipJwtAuth()
   @Post('/logout')
-  async logout(@Res({ passthrough: true }) res: Response /*@GetUser() user */) {
-    // this.authService.logout(user)
+  async logout(@Res({ passthrough: true }) res: Response) {
     res.cookie('access_token', '')
   }
 }
